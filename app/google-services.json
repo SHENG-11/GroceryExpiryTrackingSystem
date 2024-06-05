@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "498714152548",
+    "firebase_url": "https://groceryapp-f5f4d-default-rtdb.firebaseio.com",
+    "project_id": "groceryapp-f5f4d",
+    "storage_bucket": "groceryapp-f5f4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498714152548:android:9183bde4dbcfe409d21971",
+        "android_client_info": {
+          "package_name": "com.example.groceryexpirytrackingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz8BxPXCdHCCHb2kI7g1F8SZdk01OU40c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

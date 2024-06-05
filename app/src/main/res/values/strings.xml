@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">GroceryExpiryTrackingApp</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="register">Register</string>
+    <string name="comfirm_password">Comfirm Password</string>
+    <string name="already_have_an_account_click_to_login">Already Have an Account? Click to Login</string>
+</resources>
