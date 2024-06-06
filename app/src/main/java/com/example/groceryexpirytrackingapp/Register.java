@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
@@ -42,6 +43,8 @@ public class Register extends AppCompatActivity {
     String un,pw,pnum,isAdmin;
     DatabaseReference reference;
 
+    TextView clcikLoginl;
+
 
 
     @Override
@@ -55,6 +58,7 @@ public class Register extends AppCompatActivity {
         password1=findViewById(R.id.reg_pass_1);
         phoneNumber=findViewById(R.id.phoneNum);
         btn_Register=findViewById(R.id.btn_register);
+        clcikLoginl=findViewById(R.id.click_to_login_text);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -69,6 +73,13 @@ public class Register extends AppCompatActivity {
                         }
                     };
                 });
+        clcikLoginl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Register.this, Login.class);
+                startActivity(intent);
+            }
+        });
         uploadProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
