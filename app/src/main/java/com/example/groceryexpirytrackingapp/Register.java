@@ -38,14 +38,11 @@ public class Register extends AppCompatActivity {
     Uri imageUri;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     ImageView uploadProfileImage;
-    TextInputEditText username,password,password1,phoneNumber;
+    TextInputEditText username,password,password1,phoneNumber,fullName;
     Button btn_Register;
-    String un,pw,pnum,isAdmin;
+    String pw,pnum,fn;
     DatabaseReference reference;
-
     TextView clcikLoginl;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +54,7 @@ public class Register extends AppCompatActivity {
         password=findViewById(R.id.reg_pass);
         password1=findViewById(R.id.reg_pass_1);
         phoneNumber=findViewById(R.id.phoneNum);
+        fullName=findViewById(R.id.reg_fullname);
         btn_Register=findViewById(R.id.btn_register);
         clcikLoginl=findViewById(R.id.click_to_login_text);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -109,7 +107,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin){
+    void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin,String fullname){
         //specifies image get instances & reference
         StorageReference imageReference=storageReference.child(username+"."+getFileExtension(imageUri));
         imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -119,8 +117,8 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         String ImageURL=uri.toString();
-                        User i1=new User(username,phoneNumber,password,ImageURL,isAdmin);
-                        reference = FirebaseDatabase.getInstance().getReference("Users");
+                        UserVer2 i1=new UserVer2(username,phoneNumber,password,ImageURL,isAdmin,fullname);
+                        reference = FirebaseDatabase.getInstance().getReference("UsersVer2");
                         reference.child(username).setValue(i1);
                     }
                 });
@@ -135,8 +133,6 @@ public class Register extends AppCompatActivity {
 
     boolean validation(){
         //Image Validation, Username Validation
-
-
 
         if (username.length()==0){
             username.setError("This field is require");
@@ -154,6 +150,10 @@ public class Register extends AppCompatActivity {
         }
         if (password1.length()==0){
             password1.setError("This field is require");
+            return false;
+        }
+        if (fullName.length()==0){
+            fullName.setError("This field is require");
             return false;
         }
         String p1=password.getText().toString();
@@ -177,8 +177,7 @@ public class Register extends AppCompatActivity {
 
         String user=username.getText().toString();
 
-
-        DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("UsersVer2");
         Query checkUserDatabase=reference1.orderByChild("username").equalTo(user);
 
 
@@ -188,13 +187,12 @@ public class Register extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     username.setError("Username already exits");
-
-
                 }
                 else{
                     pw = password.getText().toString();
                     pnum=phoneNumber.getText().toString();
-                    UploadToFirebase(user, pnum, pw, imageUri, 0); // maybe need to change places
+                    fn=fullName.getText().toString();
+                    UploadToFirebase(user, pnum, pw, imageUri, 0,fn); // maybe need to change places
                     Toast.makeText(Register.this, "Register Successful", Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent(Register.this,Login.class);
                     startActivity(intent);
@@ -206,10 +204,6 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "Unexpected error", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
 
     }
 

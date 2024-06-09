@@ -1,13 +1,13 @@
 package com.example.groceryexpirytrackingapp;
 
-public class User {
+public class UserVer2 {
     String username,password,imageUri,phoneNumber,fullname;
     int isAdmin;
 
-    public User() {
+    public UserVer2() {
     }
 
-    public User(String username, String phoneNumber,String password, String imageUri, int isAdmin,String fullname) {
+    public UserVer2(String username, String phoneNumber,String password, String imageUri, int isAdmin,String fullname) {
         this.username = username;
         this.password = password;
         this.imageUri = imageUri;

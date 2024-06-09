@@ -73,6 +73,7 @@ public class Login extends AppCompatActivity {
                         //If password match
                         //Create intent to homepage
                         Intent intent = new Intent(Login.this, UserProfile.class);
+                        intent.putExtra("username",user);
                         startActivity(intent);
                         Toast.makeText(Login.this, "Successful Login", Toast.LENGTH_SHORT).show();
 

@@ -51,11 +51,11 @@
                 android:text="Phone Number" />
 
             <TextView
-                android:id="@+id/salaries1"
+                android:id="@+id/fullname1"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Salaries" />
+                android:text="@string/full_name" />
 
             <TextView
                 android:id="@+id/pointBonus"
