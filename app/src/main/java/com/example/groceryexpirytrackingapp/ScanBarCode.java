@@ -25,7 +25,6 @@ public class ScanBarCode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_bar_code);
         btn_scan=findViewById(R.id.btn_scanBarCode);
-        text1=findViewById(R.id.barcode_result);
         sv=findViewById(R.id.search1);
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
