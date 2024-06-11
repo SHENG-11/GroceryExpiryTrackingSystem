@@ -16,6 +16,14 @@ public class UserVer2 {
         this.fullname=fullname;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }

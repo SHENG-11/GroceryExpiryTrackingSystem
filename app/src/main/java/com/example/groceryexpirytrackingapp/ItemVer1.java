@@ -33,7 +33,13 @@ public class ItemVer1 {
         this.exp_date = exp_date;
     }
 
+    public String getPurchasedate() {
+        return purchasedate;
+    }
 
+    public void setPurchasedate(String purchasedate) {
+        this.purchasedate = purchasedate;
+    }
 
     public String getBarcode() {
         return barcode;

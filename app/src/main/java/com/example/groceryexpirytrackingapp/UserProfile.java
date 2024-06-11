@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,7 @@ public class UserProfile extends AppCompatActivity {
     ActivityUserProfileBinding binding;
     DatabaseReference reference;
     StorageReference storageReference;
+    Button btn_to_add;
 
 
     @Override
@@ -43,12 +46,19 @@ public class UserProfile extends AppCompatActivity {
             Toast.makeText(this, "Please relogin to the system", Toast.LENGTH_SHORT).show();
         }
 
+        binding.btnToAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(UserProfile.this, Item_add.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
     private void readUser(String username) {//Funtion of reading user information form realtime database
-        reference = FirebaseDatabase.getInstance().getReference("Users");//geting database references
-        storageReference = FirebaseStorage.getInstance().getReference(username + ".jpg");
+        reference = FirebaseDatabase.getInstance().getReference("UsersVer2");//geting database references
+        storageReference = FirebaseStorage.getInstance().getReference("Users/"+username + ".jpg");
         reference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {//username in child is getting from start of this activities, it contain username in string data type
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -57,6 +67,8 @@ public class UserProfile extends AppCompatActivity {
                         DataSnapshot dataSnapshot = task.getResult();//data snapshot contain data from a firebase database location
                         String username = String.valueOf(dataSnapshot.child("username").getValue());
                         String phonenumber = String.valueOf(dataSnapshot.child("phoneNumber").getValue());
+                        String fullname = String.valueOf(dataSnapshot.child("username").getValue());
+                        binding.fullname1.setText(fullname);
                         binding.username1.setText(username);
                         binding.hpNum1.setText(phonenumber);
                         try {

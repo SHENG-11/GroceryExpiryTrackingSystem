@@ -4,14 +4,17 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,7 +23,17 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -33,9 +46,13 @@ public class Item_add extends AppCompatActivity {
     ArrayAdapter<String> categoriesItem; //Array adapter
     String[] item={"Frozen Food","Snacks","Medical"};//This string show item categories
     TextInputEditText purchase,expire,barcode1;
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     TextInputEditText itemName,numberOfitem,catItem;
     String cate_selected;
     Button addItem;
+    String Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl,Item_Categories;
+    int NumOfItem;
+    DatabaseReference reference;
 
 
     @Override
@@ -95,7 +112,8 @@ public class Item_add extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validation()){
-                    Toast.makeText(Item_add.this, "All item verified", Toast.LENGTH_SHORT).show();
+                    checkItemUnique();
+
                 }else Toast.makeText(Item_add.this, "please check all field", Toast.LENGTH_SHORT).show();
             }
         });
@@ -154,19 +172,22 @@ public class Item_add extends AppCompatActivity {
 
     boolean validation(){
         //Image Validation, Username Validation
-
+        if(itemName.length()==0){
+            itemName.setError("This field is require");
+            return false;
+        }
         if (numberOfitem.length()==0){
             numberOfitem.setError("This field is require");
             return false;
         }
-        
         if (cate_selected.length()==0){
             Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+            return false;
         }
 
-         
         if (barcode1.length()==0){
             barcode1.setError("This field is require");
+            return false;
         }
 
         if (purchase.length()==0){
@@ -180,4 +201,63 @@ public class Item_add extends AppCompatActivity {
 
         return true;
     }
+    void checkItemUnique(){
+        String barcod=barcode1.getText().toString();
+
+        DatabaseReference reference1= FirebaseDatabase.getInstance().getReference("ItemVer1");
+        Query checkUserDatabase=reference1.orderByChild("barcode").equalTo(barcod);
+
+        checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    barcode1.setError("Barcode is already exits");
+                }
+                else{
+                    //Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_Categories;
+                    Item_name = itemName.getText().toString();
+                    Item_exp_date=expire.getText().toString();
+                    Item_purchasedate=purchase.getText().toString();
+                    Item_barcode = barcode1.getText().toString();
+                    //cate_selected is already a string
+                    //epno=Integer.parseInt(PatientPN.getText().toString());
+                    NumOfItem=Integer.parseInt(numberOfitem.getText().toString());
+                    UploadToFirebase(Item_name, Item_exp_date, Item_purchasedate,Item_barcode, imageUri, cate_selected,NumOfItem); // maybe need to change places
+                    Toast.makeText(Item_add.this, "Upload successful", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Item_add.this, "Unexpected error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    void UploadToFirebase(String Item_name, String Item_exp_date,String Item_purchasedate, String Item_barcode, Uri imageUri, String Item_Categories,int NumOfItem){
+        //specifies image get instances & reference
+
+        StorageReference imageReference=storageReference.child("ItemPic/"+Item_name+"."+getFileExtension(imageUri));
+        imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String ImageURL=uri.toString();
+                        ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_purchasedate,Item_barcode,ImageURL,Item_Categories,NumOfItem);
+                        reference = FirebaseDatabase.getInstance().getReference("ItemList");
+                        reference.child(Item_name).setValue(i1);
+                    }
+                });
+            }
+        });
+    }
+    String getFileExtension(Uri fileUri){
+        ContentResolver cr=getContentResolver();
+        MimeTypeMap mime=MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(fileUri));
+    }
+
 }

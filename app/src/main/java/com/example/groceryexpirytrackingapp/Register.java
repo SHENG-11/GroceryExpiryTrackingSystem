@@ -112,7 +112,7 @@ public class Register extends AppCompatActivity {
 
     void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin,String fullname){
         //specifies image get instances & reference
-        StorageReference imageReference=storageReference.child("ItemPic/"+username+"."+getFileExtension(imageUri));
+        StorageReference imageReference=storageReference.child("Users/"+username+"."+getFileExtension(imageUri));
         imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -128,7 +128,7 @@ public class Register extends AppCompatActivity {
             }
         });
     }
-    String getFileExtension(Uri fileUri){
+     String getFileExtension(Uri fileUri){
         ContentResolver cr=getContentResolver();
         MimeTypeMap mime=MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(fileUri));
