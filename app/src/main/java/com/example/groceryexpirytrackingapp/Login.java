@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,15 +25,25 @@ public class Login extends AppCompatActivity {
     TextInputEditText un,pw;
     Button btn_login1;
     DatabaseReference databaseReference;
+    TextView click_to_reg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //Find view by id
         un=findViewById(R.id.username);
         pw=findViewById(R.id.login_pass);
         btn_login1=findViewById(R.id.btn_login);
-
+        click_to_reg=findViewById(R.id.click_to_register);
+        //>>>>>>>>>>>>>>>>>>>>>>>.
+        click_to_reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Login.this, Register.class);
+                startActivity(intent);
+            }
+        });
         btn_login1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +72,7 @@ public class Login extends AppCompatActivity {
         String user,password;
         user=un.getText().toString();
         password=pw.getText().toString();
-        databaseReference= FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference= FirebaseDatabase.getInstance().getReference("UsersVer2");
         Query q1=databaseReference.orderByChild("username").equalTo(user);
 
         q1.addListenerForSingleValueEvent(new ValueEventListener() {

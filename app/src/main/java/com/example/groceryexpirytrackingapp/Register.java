@@ -58,6 +58,7 @@ public class Register extends AppCompatActivity {
         btn_Register=findViewById(R.id.btn_register);
         clcikLoginl=findViewById(R.id.click_to_login_text);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        //Image handle
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -71,13 +72,6 @@ public class Register extends AppCompatActivity {
                         }
                     };
                 });
-        clcikLoginl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(Register.this, Login.class);
-                startActivity(intent);
-            }
-        });
         uploadProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +81,15 @@ public class Register extends AppCompatActivity {
                 activityResultLauncher.launch(photopicker);
             }
         });
+        //Image handle end
+        clcikLoginl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Register.this, Login.class);
+                startActivity(intent);
+            }
+        });
+
 
         btn_Register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +112,7 @@ public class Register extends AppCompatActivity {
 
     void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin,String fullname){
         //specifies image get instances & reference
-        StorageReference imageReference=storageReference.child(username+"."+getFileExtension(imageUri));
+        StorageReference imageReference=storageReference.child("ItemPic/"+username+"."+getFileExtension(imageUri));
         imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

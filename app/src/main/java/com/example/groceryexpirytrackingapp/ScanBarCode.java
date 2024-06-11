@@ -17,7 +17,6 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 public class ScanBarCode extends AppCompatActivity {
     Button btn_scan;
-    TextView text1;
     SearchView sv;
 
     @Override
@@ -46,19 +45,7 @@ public class ScanBarCode extends AppCompatActivity {
        if (result.getContents()!=null){
         String barcode=result.getContents();
         sv.setQuery(barcode,true);
-
-           //sv.setText(result.getContents());
-           /*
-           AlertDialog.Builder builder=new AlertDialog.Builder(ScanBarCode.this);
-           builder.setTitle("Result");
-           builder.setMessage(result.getContents());
-           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
-
                }
-           }).show();*/
-       }
     });
 
 }

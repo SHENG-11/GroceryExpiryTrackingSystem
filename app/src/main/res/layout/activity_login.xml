@@ -55,4 +55,13 @@
         android:text="@string/login"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/click_to_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Haven't have an account? Click to Register"
+        android:layout_marginTop="15dp"
+        android:textSize="15sp"/>
+
 </LinearLayout>

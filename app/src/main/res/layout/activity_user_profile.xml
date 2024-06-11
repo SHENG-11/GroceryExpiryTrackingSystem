@@ -32,7 +32,7 @@
                     android:id="@+id/userPicture1"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/conversation"
+                    android:src="@drawable/profile"
                     android:scaleType="centerCrop"/>
             </androidx.cardview.widget.CardView>
 
