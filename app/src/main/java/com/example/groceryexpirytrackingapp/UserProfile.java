@@ -29,7 +29,7 @@ public class UserProfile extends AppCompatActivity {
     ActivityUserProfileBinding binding;
     DatabaseReference reference;
     StorageReference storageReference;
-    Button btn_to_add;
+
 
 
     @Override
