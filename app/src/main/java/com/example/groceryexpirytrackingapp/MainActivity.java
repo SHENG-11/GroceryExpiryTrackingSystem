@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recycleView_item);
         fat=findViewById(R.id.btn_floating_add);
         searchView=findViewById(R.id.search1);
+        searchView.clearFocus();
         //>>>>>>>>>>>>>>>>>>>>>>>>
 
         //Floating Action Btn add function
@@ -76,6 +77,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Pending
+                searchList(newText);
+                return true;
+            }
+        });
+
+
+    }
+    public void searchList(String text){
+        ArrayList<ItemVer1> searachList1=new ArrayList<>();
+        for (ItemVer1 ittem:itemVer1s){
+            //search by title
+            if (ittem.getName().toLowerCase().contains(text.toLowerCase()) || ittem.getBarcode().toLowerCase().contains(text.toLowerCase())){
+                searachList1.add(ittem);
+
+            }
+        }
+        itemAdapter.searchItemInformation(searachList1);
     }
 }

@@ -70,7 +70,7 @@ public class Item_add extends AppCompatActivity {
         numberOfitem=findViewById(R.id.numItem);
         addItem=findViewById(R.id.btn_add_item);
         ItemImage=findViewById(R.id.userPicture1);
-        //catItem=findViewById(R.id.categoryOfItem);
+
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //Calender details
         Calendar calendar=Calendar.getInstance();
