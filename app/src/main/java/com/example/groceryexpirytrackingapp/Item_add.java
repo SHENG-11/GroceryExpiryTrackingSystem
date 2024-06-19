@@ -42,15 +42,12 @@ import java.util.Calendar;
 public class Item_add extends AppCompatActivity {
     Uri imageUri;
     ImageView ItemImage;
-    AutoCompleteTextView itemCategories; //drop down btn
-    ArrayAdapter<String> categoriesItem; //Array adapter
-    String[] item={"Frozen Food","Snacks","Medical"};//This string show item categories
     TextInputEditText purchase,expire,barcode1;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-    TextInputEditText itemName,numberOfitem,catItem;
+    TextInputEditText itemName,numberOfitem;
     String cate_selected;
     Button addItem;
-    String Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl,Item_Categories;
+    String Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl;
     int NumOfItem;
     DatabaseReference reference;
 
@@ -60,9 +57,7 @@ public class Item_add extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_add);
         //Find view by id
-        itemCategories=findViewById(R.id.dropDownCategories);
-        categoriesItem=new ArrayAdapter<String>(this,R.layout.itemcategorieslist,item);//layout in middle contain textview
-        itemCategories.setAdapter(categoriesItem);
+
         purchase=findViewById(R.id.item_instock_date);
         expire=findViewById(R.id.item_expire_date);
         barcode1=findViewById(R.id.item_barcode);
@@ -102,12 +97,7 @@ public class Item_add extends AppCompatActivity {
             }
         });
         //Image handle end here
-        itemCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {//drop down list
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             cate_selected=parent.getItemAtPosition(position).toString();// Drop down list item save in this variable
-            }
-        });
+
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +194,7 @@ public class Item_add extends AppCompatActivity {
     void checkItemUnique(){
         String barcod=barcode1.getText().toString();
 
-        DatabaseReference reference1= FirebaseDatabase.getInstance().getReference("ItemVer1");
+        DatabaseReference reference1= FirebaseDatabase.getInstance().getReference("ItemList");
         Query checkUserDatabase=reference1.orderByChild("barcode").equalTo(barcod);
 
         checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -220,10 +210,8 @@ public class Item_add extends AppCompatActivity {
                     Item_exp_date=expire.getText().toString();
                     Item_purchasedate=purchase.getText().toString();
                     Item_barcode = barcode1.getText().toString();
-                    //cate_selected is already a string
-                    //epno=Integer.parseInt(PatientPN.getText().toString());
                     NumOfItem=Integer.parseInt(numberOfitem.getText().toString());
-                    UploadToFirebase(Item_name, Item_exp_date, Item_purchasedate,Item_barcode, imageUri, cate_selected,NumOfItem); // maybe need to change places
+                    UploadToFirebase(Item_name, Item_exp_date, Item_purchasedate,Item_barcode, imageUri,NumOfItem); // maybe need to change places
                     Toast.makeText(Item_add.this, "Upload successful", Toast.LENGTH_SHORT).show();
 
                 }
@@ -235,7 +223,7 @@ public class Item_add extends AppCompatActivity {
             }
         });
     }
-    void UploadToFirebase(String Item_name, String Item_exp_date,String Item_purchasedate, String Item_barcode, Uri imageUri, String Item_Categories,int NumOfItem){
+    void UploadToFirebase(String Item_name, String Item_exp_date,String Item_purchasedate, String Item_barcode, Uri imageUri,int NumOfItem){
         //specifies image get instances & reference
 
         StorageReference imageReference=storageReference.child("ItemPic/"+Item_name+"."+getFileExtension(imageUri));
@@ -245,8 +233,8 @@ public class Item_add extends AppCompatActivity {
                 imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        String ImageURL=uri.toString();
-                        ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_purchasedate,Item_barcode,ImageURL,Item_Categories,NumOfItem);
+                        Item_ImageUrl=uri.toString();
+                        ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl,NumOfItem);
                         reference = FirebaseDatabase.getInstance().getReference("ItemList");
                         reference.child(Item_name).setValue(i1);
                     }
