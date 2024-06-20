@@ -47,8 +47,8 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 intent.putExtra("Exp",itemList.get(position).getExp_date());
                 intent.putExtra("PDate",itemList.get(position).getPurchasedate());
                 intent.putExtra("Barcode",itemList.get(position).getBarcode());
-                intent.putExtra("Cat",itemList.get(position).getCategories());
                 intent.putExtra("NumItem",itemList.get(position).getNumOfItem());
+                intent.putExtra("key",itemList.get(position).getKey());
                 context.startActivity(intent);
 
             }

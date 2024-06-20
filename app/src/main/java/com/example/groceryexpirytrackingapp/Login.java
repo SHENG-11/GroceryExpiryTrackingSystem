@@ -84,9 +84,18 @@ public class Login extends AppCompatActivity {
                     if (userPwInDB.equals(password)){
                         //If password match
                         //Create intent to homepage
-                        Intent intent = new Intent(Login.this, UserProfile.class);
-                        intent.putExtra("username",user);
-                        startActivity(intent);
+                        int isAdmin=snapshot.child(user).child("isAdmin").getValue(Integer.class);
+                        if (isAdmin==1){
+                            Intent intent = new Intent(Login.this, Admin_main.class);
+                            intent.putExtra("username",user);
+                            startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(Login.this, UserProfile.class);
+                            intent.putExtra("username",user);
+                            startActivity(intent);
+                        }
+
                         Toast.makeText(Login.this, "Successful Login", Toast.LENGTH_SHORT).show();
 
                     }else{

@@ -45,7 +45,7 @@ public class Item_add extends AppCompatActivity {
     TextInputEditText purchase,expire,barcode1;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     TextInputEditText itemName,numberOfitem;
-    String cate_selected;
+
     Button addItem;
     String Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl;
     int NumOfItem;
@@ -170,10 +170,7 @@ public class Item_add extends AppCompatActivity {
             numberOfitem.setError("This field is require");
             return false;
         }
-        if (cate_selected.length()==0){
-            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
 
         if (barcode1.length()==0){
             barcode1.setError("This field is require");
@@ -205,7 +202,7 @@ public class Item_add extends AppCompatActivity {
                     barcode1.setError("Barcode is already exits");
                 }
                 else{
-                    //Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_Categories;
+                    //Item_name,Item_exp_date,Item_purchasedate,Item_barcode;
                     Item_name = itemName.getText().toString();
                     Item_exp_date=expire.getText().toString();
                     Item_purchasedate=purchase.getText().toString();

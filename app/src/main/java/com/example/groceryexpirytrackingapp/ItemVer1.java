@@ -1,19 +1,26 @@
 package com.example.groceryexpirytrackingapp;
 
 public class ItemVer1 {
-    String name,exp_date,purchasedate,barcode,ImageUrl,Categories;
+    String name,exp_date,purchasedate,barcode,ImageUrl,key;
     int NumOfItem;
 
     public ItemVer1() {
     }
 
-    public ItemVer1(String name, String exp_date, String purchasedate, String barcode, String imageUrl, String categories, int numOfItem) {
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public ItemVer1(String name, String exp_date, String purchasedate, String barcode, String imageUrl, int numOfItem) {
         this.name = name;
         this.exp_date = exp_date;
         this.purchasedate = purchasedate;
         this.barcode = barcode;
         this.ImageUrl = imageUrl;
-        this.Categories = categories;
         this.NumOfItem = numOfItem;
     }
 
@@ -55,14 +62,6 @@ public class ItemVer1 {
 
     public void setImageUrl(String imageUrl) {
         ImageUrl = imageUrl;
-    }
-
-    public String getCategories() {
-        return Categories;
-    }
-
-    public void setCategories(String categories) {
-        Categories = categories;
     }
 
     public int getNumOfItem() {

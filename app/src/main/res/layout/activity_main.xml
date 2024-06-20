@@ -9,25 +9,40 @@
     tools:context=".MainActivity">
 
 
-    <android.widget.SearchView
-        android:id="@+id/search1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-        android:closeIcon="@drawable/baseline_close_24"
-        android:focusable="false"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search..."
-        android:searchIcon="@drawable/baseline_search_24" />
+        android:id="@+id/search2"
+        android:orientation="horizontal">
+
+        <android.widget.SearchView
+            android:id="@+id/search1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="16dp"
+            android:closeIcon="@drawable/baseline_close_24"
+            android:focusable="false"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search..."
+            android:searchIcon="@drawable/baseline_search_24" />
+
+        <ImageView
+            android:id="@+id/scanBarCode1"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/scanbarcode"
+            />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search1"
+        android:layout_below="@+id/search2"
         android:scrollbars="vertical" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

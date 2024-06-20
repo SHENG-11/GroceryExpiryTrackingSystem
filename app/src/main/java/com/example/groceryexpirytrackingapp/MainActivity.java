@@ -1,5 +1,6 @@
 package com.example.groceryexpirytrackingapp;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.example.groceryexpirytrackingapp.databinding.ActivityMainBinding;
@@ -18,6 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     ValueEventListener valueEventListener;
     SearchView searchView;
     ItemAdapter itemAdapter;
+    ImageView scanBarcode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,14 @@ public class MainActivity extends AppCompatActivity {
         fat=findViewById(R.id.btn_floating_add);
         searchView=findViewById(R.id.search1);
         searchView.clearFocus();
+        scanBarcode=findViewById(R.id.scanBarCode1);
         //>>>>>>>>>>>>>>>>>>>>>>>>
+        scanBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanCode();
+            }
+        });
 
         //Floating Action Btn add function
         fat.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 itemVer1s.clear();
                 for (DataSnapshot itemSnapshot: snapshot.getChildren()){
                     ItemVer1 item1=itemSnapshot.getValue(ItemVer1.class);
+                    item1.setKey(itemSnapshot.getKey());
                     itemVer1s.add(item1);
                 }
                 itemAdapter.notifyDataSetChanged();
@@ -104,4 +118,21 @@ public class MainActivity extends AppCompatActivity {
         }
         itemAdapter.searchItemInformation(searachList1);
     }
+    //Scan barcode
+    private void scanCode(){
+        ScanOptions options=new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        barLaucher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> barLaucher=registerForActivityResult(new ScanContract(), result->{
+        if (result.getContents()!=null){
+            String barcode=result.getContents();
+            searchView.setQuery(barcode,true);
+        }
+    });
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }

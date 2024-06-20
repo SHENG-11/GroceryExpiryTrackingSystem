@@ -15,6 +15,7 @@
     <string name="day_to_expire">Day To Expire</string>
     <string name="days_left">Days Left</string>
     <string name="barcode">Barcode</string>
+    <string name="quantities">Quantities</string>
 
     <string-array name="item_cat">
         <item>Frozen Food</item>
