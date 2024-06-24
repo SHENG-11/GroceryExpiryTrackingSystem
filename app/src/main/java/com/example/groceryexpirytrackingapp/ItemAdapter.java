@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> {
     List<ItemVer1> itemList;
     Context context;
 
@@ -63,18 +63,21 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder> {
         itemList=searchList;
         notifyDataSetChanged();
     }
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+        TextView name,dayLeft,barcode;
+        CardView itemCard;
+
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name=itemView.findViewById(R.id.row_item_name);
+            barcode=itemView.findViewById(R.id.row_barcode);
+            dayLeft=itemView.findViewById(R.id.number_days);
+            itemCard=itemView.findViewById(R.id.Itemcard1);
+
+        }
+
 }
-class MyViewHolder extends RecyclerView.ViewHolder{
-    TextView name,dayLeft,barcode;
-    CardView itemCard;
-
-
-    public MyViewHolder(@NonNull View itemView) {
-        super(itemView);
-        name=itemView.findViewById(R.id.row_item_name);
-        barcode=itemView.findViewById(R.id.row_barcode);
-        dayLeft=itemView.findViewById(R.id.number_days);
-        itemCard=itemView.findViewById(R.id.Itemcard1);
-
-    }
 }
+
+

@@ -16,6 +16,9 @@
     <string name="days_left">Days Left</string>
     <string name="barcode">Barcode</string>
     <string name="quantities">Quantities</string>
+    <string name="mission_title">Mission Title</string>
+    <string name="mission_desc">Mission Desc</string>
+    <string name="reward_point">Reward Point</string>
 
     <string-array name="item_cat">
         <item>Frozen Food</item>
