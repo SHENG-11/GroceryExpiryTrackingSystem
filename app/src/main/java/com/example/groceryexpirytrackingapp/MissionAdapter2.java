@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyViewHolder> {
@@ -47,6 +48,10 @@ public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyView
     @Override
     public int getItemCount() {
         return missions.size();
+    }
+    public void searchItemInformation(ArrayList<Mission> searchList){
+        missions=searchList;
+        notifyDataSetChanged();
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView title,status,points,assignto;

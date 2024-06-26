@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Admin_Mission extends AppCompatActivity {
     FloatingActionButton fat;
     DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
-    SearchView searchView;
+
     List<Mission> MissionList;
     MissionAdapter2 adapter2;
 
@@ -38,7 +39,7 @@ public class Admin_Mission extends AppCompatActivity {
         setContentView(R.layout.activity_admin_mission);
         recyclerView=findViewById(R.id.recycleView_item);
         fat=findViewById(R.id.btn_floating_add_mission);
-        searchView=findViewById(R.id.mission_search);
+
         //>>end of find view of id
 
         fat.setOnClickListener(new View.OnClickListener() {
@@ -56,9 +57,10 @@ public class Admin_Mission extends AppCompatActivity {
         //the adapter we create
         adapter2=new MissionAdapter2(MissionList,Admin_Mission.this);
         recyclerView.setAdapter(adapter2); // set it into recycleview
-        databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
 
-        valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
+        Query q1=databaseReference.orderByChild("status").equalTo("Available");
+        valueEventListener=q1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MissionList.clear();
@@ -76,5 +78,8 @@ public class Admin_Mission extends AppCompatActivity {
             }
         });
 
+
+    //give one word, and then just set to adapter2
     }
+
 }
