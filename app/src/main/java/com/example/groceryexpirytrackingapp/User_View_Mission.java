@@ -5,13 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,50 +18,38 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Admin_Mission extends AppCompatActivity {
-    RecyclerView recyclerView;
-    FloatingActionButton fat;
-    DatabaseReference databaseReference;
-    ValueEventListener valueEventListener;
+public class User_View_Mission extends AppCompatActivity {
+    RecyclerView rv_mission;
     List<Mission> MissionList;
+    DatabaseReference databaseReference;
     MissionAdapter2 adapter2;
     String username="";
     int admin;
-
+    ValueEventListener valueEventListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_mission);
-        recyclerView=findViewById(R.id.recycleView_item);
-        fat=findViewById(R.id.btn_floating_add_mission);
+        setContentView(R.layout.activity_user_view_mission);
+        rv_mission=findViewById(R.id.rv_user_mission);
 
-        //>>end of find view of id
-
-        fat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(Admin_Mission.this, Admin_Mission_Add.class);
-                startActivity(intent);
-            }
-        });
-
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(Admin_Mission.this,1);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(User_View_Mission.this,1);
+        rv_mission.setLayoutManager(gridLayoutManager);
         //ArrayList Declear
         MissionList=new ArrayList<>();
-        recyclerView.setAdapter(adapter2); // set it into recycleview
-
+        //the adapter we create
+        //Get Bundle information;
         Bundle bundle=getIntent().getExtras();
         if (bundle!=null){
             //Get bundle information
+
+
             username=bundle.getString("username");
             admin=bundle.getInt("isAdmin");
-            adapter2=new MissionAdapter2(MissionList,Admin_Mission.this,admin,username);
-            recyclerView.setAdapter(adapter2); // set it into recycleview
+            adapter2=new MissionAdapter2(MissionList,User_View_Mission.this,admin,username);
+            rv_mission.setAdapter(adapter2); // set it into recycleview
             databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
-            if (admin==0){// if the user was not admin, we set the adapter with status available and disable the floating action button
-                fat.setVisibility(View.GONE);
-                fat.setEnabled(false);
+
+            if (admin==0){
                 Query q1=databaseReference.orderByChild("status").equalTo("Available");
                 valueEventListener=q1.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -82,9 +66,7 @@ public class Admin_Mission extends AppCompatActivity {
 
                     }
                 });
-            }else if (admin==1) {
-                fat.setVisibility(View.VISIBLE);
-                fat.setEnabled(true);
+            } else if (admin==1) {
                 valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -101,28 +83,14 @@ public class Admin_Mission extends AppCompatActivity {
                     }
                 });
             }
+
+
+            Toast.makeText(this, "bundle get", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "bundle error", Toast.LENGTH_SHORT).show();
         }
 
-        databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
-        //Query q1=databaseReference.orderByChild("status").equalTo("Available");
-        valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MissionList.clear();
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                    Mission m1=itemSnapshot.getValue(Mission.class);
-                    m1.setKey(itemSnapshot.getKey());
-                    MissionList.add(m1);
-                }
-                adapter2.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
     }
-
 }

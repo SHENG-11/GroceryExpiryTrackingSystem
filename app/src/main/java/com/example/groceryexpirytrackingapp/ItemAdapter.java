@@ -18,6 +18,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
     List<ItemVer1> itemList;
     Context context;
 
+
     public ItemAdapter(Context context, List<ItemVer1> itemList) {
         this.context = context;
         this.itemList = itemList;
@@ -32,15 +33,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
         holder.name.setText(itemList.get(position).getName());
         holder.barcode.setText(itemList.get(position).getBarcode());
         holder.dayLeft.setText(itemList.get(position).getExp_date());
-        String expire=itemList.get(position).getExp_date();
-
 
         holder.itemCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent=new Intent(context, Item_Update.class);
                 intent.putExtra("Image",itemList.get(position).getImageUrl());
                 intent.putExtra("Name",itemList.get(position).getName());

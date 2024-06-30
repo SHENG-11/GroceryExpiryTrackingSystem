@@ -40,6 +40,7 @@ public class UserProfile extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");//geting string from previous activity
+        int isAdmin=intent.getIntExtra("isAdmin",0);
         if (username != null) {
             readUser(username);//calling function at below
         } else {
@@ -49,7 +50,9 @@ public class UserProfile extends AppCompatActivity {
         binding.btnToAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(UserProfile.this, Item_add.class);
+                Intent intent=new Intent(UserProfile.this, Admin_Mission.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
                 startActivity(intent);
             }
         });

@@ -86,13 +86,15 @@ public class Login extends AppCompatActivity {
                         //Create intent to homepage
                         int isAdmin=snapshot.child(user).child("isAdmin").getValue(Integer.class);
                         if (isAdmin==1){
-                            Intent intent = new Intent(Login.this, Admin_main.class);
+                            Intent intent = new Intent(Login.this, UserProfile.class);
                             intent.putExtra("username",user);
+                            intent.putExtra("isAdmin",isAdmin);
                             startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(Login.this, UserProfile.class);
                             intent.putExtra("username",user);
+                            intent.putExtra("isAdmin",isAdmin);
                             startActivity(intent);
                         }
 
