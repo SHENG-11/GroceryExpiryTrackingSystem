@@ -41,8 +41,6 @@ public class User_View_Mission extends AppCompatActivity {
         Bundle bundle=getIntent().getExtras();
         if (bundle!=null){
             //Get bundle information
-
-
             username=bundle.getString("username");
             admin=bundle.getInt("isAdmin");
             adapter2=new MissionAdapter2(MissionList,User_View_Mission.this,admin,username);
@@ -83,9 +81,6 @@ public class User_View_Mission extends AppCompatActivity {
                     }
                 });
             }
-
-
-            Toast.makeText(this, "bundle get", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(this, "bundle error", Toast.LENGTH_SHORT).show();

@@ -69,6 +69,7 @@ public class Login extends AppCompatActivity {
         return true;
     }
     public void validuser(){
+        //Before user login into system, system are going to check username, and password
         String user,password;
         user=un.getText().toString();
         password=pw.getText().toString();

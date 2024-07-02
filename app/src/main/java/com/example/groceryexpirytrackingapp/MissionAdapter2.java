@@ -50,11 +50,19 @@ public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyView
                 intent.putExtra("Title",missions.get(position).getTitle());
                 intent.putExtra("Desc",missions.get(position).getDesc());
                 intent.putExtra("Points",missions.get(position).getPoint());
+                intent.putExtra("Status",missions.get(position).getStatus());
                 intent.putExtra("Key",missions.get(position).getKey());
                 intent.putExtra("People",missions.get(position).getAssignTo());
                 context.startActivity(intent);
                 } else if (isAdmin==0) {
-                    Intent intent=new Intent(context,UserProfile.class);
+                    Intent intent=new Intent(context, User_Accecpt_Mission.class);
+                    intent.putExtra("Title",missions.get(position).getTitle());
+                    intent.putExtra("Desc",missions.get(position).getDesc());
+                    intent.putExtra("Points",missions.get(position).getPoint());
+                    intent.putExtra("Key",missions.get(position).getKey());
+                    intent.putExtra("Status",missions.get(position).getStatus());
+                    intent.putExtra("CurrentStaff",missions.get(position).getAssignTo());
+                    intent.putExtra("People",username);
                     context.startActivity(intent);
 
                 }

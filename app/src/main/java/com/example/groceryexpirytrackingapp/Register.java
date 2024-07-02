@@ -177,15 +177,11 @@ public class Register extends AppCompatActivity {
         return true;
     }
     void checkUser(){
-
         String user=username.getText().toString();
-
         DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("UsersVer2");
         Query checkUserDatabase=reference1.orderByChild("username").equalTo(user);
-
-
         checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-
+            //the method to check and ensure username is unique
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
@@ -201,13 +197,11 @@ public class Register extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(Register.this, "Unexpected error", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
 }

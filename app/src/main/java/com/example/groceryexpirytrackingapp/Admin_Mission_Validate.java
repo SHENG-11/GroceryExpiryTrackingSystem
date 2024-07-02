@@ -37,16 +37,7 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         //Bundle Handle
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            //get bundle from last activities "MissionAdapter2"
-            Key = bundle.getString("Key");
-           missiontitle=bundle.getString("Title");
-           description=bundle.getString("Desc");
-           points=bundle.getString("Points");
-           staff=bundle.getString("People");
-           //Set it into TV
-           title.setText(missiontitle);
-           desc.setText(description);
-           point.setText(points);
+           InfogetAndSet(bundle);
         }
         //>>>>>>>>>>>>>>>>>>>>>>>>>
         if (staff.equals("All")){
@@ -71,6 +62,20 @@ public class Admin_Mission_Validate extends AppCompatActivity {
                 });
             }
         });
+        //Validate button havent set
 
+
+    }
+    public void InfogetAndSet(Bundle bundle){
+        //get bundle from last activities "MissionAdapter2"
+        Key = bundle.getString("Key");
+        missiontitle=bundle.getString("Title");
+        description=bundle.getString("Desc");
+        points=bundle.getString("Points");
+        staff=bundle.getString("People");
+        //Set it into TV
+        title.setText(missiontitle);
+        desc.setText(description);
+        point.setText(points);
     }
 }

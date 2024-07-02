@@ -32,7 +32,7 @@ public class ScanBarCode extends AppCompatActivity {
             }
         });
     }
-    private void scanCode(){
+    private void scanCode(){//Scan QR code Function
         ScanOptions options=new ScanOptions();
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
