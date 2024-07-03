@@ -110,7 +110,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin,String fullname){
+    void UploadToFirebase(String username, String phoneNumber,String password, Uri imageUri, int isAdmin,String fullname,int points){
         //specifies image get instances & reference
         StorageReference imageReference=storageReference.child("Users/"+username+"."+getFileExtension(imageUri));
         imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -120,7 +120,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         String ImageURL=uri.toString();
-                        UserVer2 i1=new UserVer2(username,phoneNumber,password,ImageURL,isAdmin,fullname);
+                        UserVer2 i1=new UserVer2(username,phoneNumber,password,ImageURL,isAdmin,fullname,points);
                         reference = FirebaseDatabase.getInstance().getReference("UsersVer2");
                         reference.child(username).setValue(i1);
                     }
@@ -191,7 +191,7 @@ public class Register extends AppCompatActivity {
                     pw = password.getText().toString();
                     pnum=phoneNumber.getText().toString();
                     fn=fullName.getText().toString();
-                    UploadToFirebase(user, pnum, pw, imageUri, 0,fn); // maybe need to change places
+                    UploadToFirebase(user, pnum, pw, imageUri, 0,fn,0); // maybe need to change places
                     Toast.makeText(Register.this, "Register Successful", Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent(Register.this,Login.class);
                     startActivity(intent);

@@ -1,15 +1,20 @@
 package com.example.groceryexpirytrackingapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Admin_Mission extends AppCompatActivity {
+public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     RecyclerView recyclerView;
     FloatingActionButton fat;
     DatabaseReference databaseReference;
@@ -30,7 +35,8 @@ public class Admin_Mission extends AppCompatActivity {
     List<Mission> MissionList;
     MissionAdapter2 adapter2;
     String username="";
-    int admin;
+    int admin,point;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public class Admin_Mission extends AppCompatActivity {
         setContentView(R.layout.activity_admin_mission);
         recyclerView=findViewById(R.id.recycleView_item);
         fat=findViewById(R.id.btn_floating_add_mission);
+        swipeRefreshLayout=findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         //>>end of find view of id
 
@@ -60,7 +68,9 @@ public class Admin_Mission extends AppCompatActivity {
             //Get bundle information
             username=bundle.getString("username");
             admin=bundle.getInt("isAdmin");
-            adapter2=new MissionAdapter2(MissionList,Admin_Mission.this,admin,username);
+            point=bundle.getInt("CurrentPoints");
+
+            adapter2=new MissionAdapter2(Admin_Mission.this,MissionList,Admin_Mission.this,admin,username,point);
             recyclerView.setAdapter(adapter2); // set it into recycleview
             databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
             if (admin==0){// if the user was not admin, we set the adapter with status available and disable the floating action button
@@ -125,4 +135,20 @@ public class Admin_Mission extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {Toast.makeText(Admin_Mission.this, "Refresh", Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==1){
+            onRefresh();
+        }
+    }
 }

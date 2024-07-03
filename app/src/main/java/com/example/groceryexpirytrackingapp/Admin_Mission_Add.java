@@ -3,6 +3,8 @@ package com.example.groceryexpirytrackingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,7 @@ public class Admin_Mission_Add extends AppCompatActivity {
 TextInputEditText title,desc,rewardPoint;
 Button add_mission;
 DatabaseReference reference;
-
+Activity activity;
 
 
     @Override
@@ -38,7 +40,7 @@ DatabaseReference reference;
             public void onClick(View v) {
                 if (validation()){
                     UploadToFireBase();
-                    Toast.makeText(Admin_Mission_Add.this, "True", Toast.LENGTH_SHORT).show();
+                    //to thank you page
                 }
                 else {
                     Toast.makeText(Admin_Mission_Add.this, "False", Toast.LENGTH_SHORT).show();
@@ -72,7 +74,7 @@ DatabaseReference reference;
     void UploadToFireBase(){
         String mission_title=title.getText().toString();
         String mission_desc=desc.getText().toString();
-        String rewardPoint1=rewardPoint.getText().toString();
+        int rewardPoint1=Integer.parseInt((rewardPoint.getText().toString()));
         Mission m1=new Mission(mission_title,"Available",mission_desc,"All",rewardPoint1);
         reference = FirebaseDatabase.getInstance().getReference("MissionList");
         reference.child(mission_title).setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -1,14 +1,19 @@
 package com.example.groceryexpirytrackingapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,12 +24,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class User_Accecpt_Mission extends AppCompatActivity {
+public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     TextView title, desc, point,Message;
     String Key, username;
-    String description, missiontitle, points, staff,status;
+    int points;
+    String description, missiontitle, staff,status;
     Button accept, validate;//delete mission or validate it
     DatabaseReference reference;
+    SwipeRefreshLayout swipeRefreshLayout;
+
 
 
     @Override
@@ -37,6 +45,7 @@ public class User_Accecpt_Mission extends AppCompatActivity {
         accept = findViewById(R.id.btn_accept_mission);
         validate=findViewById(R.id.btn_mission_complete);
         Message=findViewById(R.id.pendingText);
+        swipeRefreshLayout=findViewById(R.id.swipe2);
         //Bundle Handle
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -54,15 +63,13 @@ public class User_Accecpt_Mission extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(User_Accecpt_Mission.this, "Missions Accepts", Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(User_Accecpt_Mission.this, Admin_Mission.class);
-                        startActivity(intent);
+                        accept.setEnabled(false);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(User_Accecpt_Mission.this, "Mission Take Fail", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(User_Accecpt_Mission.this, Admin_Mission.class);
-                        startActivity(intent);
+
                     }
                 });
             }
@@ -77,8 +84,8 @@ public class User_Accecpt_Mission extends AppCompatActivity {
                 reference.setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Intent intent=new Intent(User_Accecpt_Mission.this, Admin_Mission.class);
-                        startActivity(intent);
+                        Toast.makeText(User_Accecpt_Mission.this, "sent to validate", Toast.LENGTH_SHORT).show();
+                        validate.setEnabled(false);
                     }
                 });
             }
@@ -90,10 +97,11 @@ public class User_Accecpt_Mission extends AppCompatActivity {
             Key = bundle.getString("Key");
             missiontitle = bundle.getString("Title");
             description = bundle.getString("Desc");
-            points = bundle.getString("Points");
+            points = bundle.getInt("Points");
             staff=bundle.getString("CurrentStaff");
             username = bundle.getString("People");
             status=bundle.getString("Status");
+
             //staff="All"  username="Sheng2222"
             //if status==pending cannot take cannot,cannot validate
             if (username.equals(staff)){//2222=2222
@@ -117,6 +125,20 @@ public class User_Accecpt_Mission extends AppCompatActivity {
             //Set it into TV
             title.setText(missiontitle);
             desc.setText(description);
-            point.setText(points);
+            point.setText(Integer.toString(points));
         }
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {Toast.makeText(User_Accecpt_Mission.this, "Refresh", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
+    }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==1){
+            onRefresh();
+        }
+    }
     }

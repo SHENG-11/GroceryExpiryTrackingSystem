@@ -1,5 +1,6 @@
 package com.example.groceryexpirytrackingapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,14 +19,17 @@ import java.util.List;
 public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyViewHolder> {
     private List<Mission> missions;
     Context context;
+    Activity activity;
     String username;
-    int isAdmin;
+    int isAdmin,point;
 
-    public MissionAdapter2(List<Mission> missions, Context context,int isAdmin,String username) {
+    public MissionAdapter2(Activity activity,List<Mission> missions, Context context,int isAdmin,String username,int point) {
+        this.activity=activity;
         this.missions = missions;
         this.context = context;
         this.isAdmin=isAdmin;
         this.username=username;
+        this.point=point;
     }
 
     @NonNull
@@ -39,7 +43,7 @@ public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.title.setText(missions.get(position).getTitle());
         holder.status.setText(missions.get(position).getStatus());
-        holder.points.setText(missions.get(position).getPoint());
+        holder.points.setText(Integer.toString(missions.get(position).getPoints()));
         holder.assignto.setText(missions.get(position).getAssignTo());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -49,21 +53,24 @@ public class MissionAdapter2 extends RecyclerView.Adapter<MissionAdapter2.MyView
                 Intent intent=new Intent(context, Admin_Mission_Validate.class);
                 intent.putExtra("Title",missions.get(position).getTitle());
                 intent.putExtra("Desc",missions.get(position).getDesc());
-                intent.putExtra("Points",missions.get(position).getPoint());
+                intent.putExtra("Points",missions.get(position).getPoints());//user points
                 intent.putExtra("Status",missions.get(position).getStatus());
+                intent.putExtra("CurrentPoints",point);
                 intent.putExtra("Key",missions.get(position).getKey());
                 intent.putExtra("People",missions.get(position).getAssignTo());
-                context.startActivity(intent);
+                activity.startActivityForResult(intent,1);
+
                 } else if (isAdmin==0) {
                     Intent intent=new Intent(context, User_Accecpt_Mission.class);
                     intent.putExtra("Title",missions.get(position).getTitle());
                     intent.putExtra("Desc",missions.get(position).getDesc());
-                    intent.putExtra("Points",missions.get(position).getPoint());
+                    intent.putExtra("Points",missions.get(position).getPoints());
                     intent.putExtra("Key",missions.get(position).getKey());
                     intent.putExtra("Status",missions.get(position).getStatus());
+                    intent.putExtra("CurrentPoints",point);//User acc point
                     intent.putExtra("CurrentStaff",missions.get(position).getAssignTo());
                     intent.putExtra("People",username);
-                    context.startActivity(intent);
+                    activity.startActivityForResult(intent,1);
 
                 }
                 else {

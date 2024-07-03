@@ -2,18 +2,27 @@ package com.example.groceryexpirytrackingapp;
 
 public class UserVer2 {
     String username,password,imageUri,phoneNumber,fullname;
-    int isAdmin;
+    int isAdmin,points;
 
     public UserVer2() {
     }
 
-    public UserVer2(String username, String phoneNumber,String password, String imageUri, int isAdmin,String fullname) {
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public UserVer2(String username, String phoneNumber, String password, String imageUri, int isAdmin, String fullname, int points) {
         this.username = username;
         this.password = password;
         this.imageUri = imageUri;
         this.isAdmin = isAdmin;
         this.phoneNumber=phoneNumber;
         this.fullname=fullname;
+        this.points=points;
     }
 
     public String getFullname() {

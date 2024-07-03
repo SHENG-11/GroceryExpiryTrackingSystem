@@ -71,6 +71,7 @@ public class Login extends AppCompatActivity {
     public void validuser(){
         //Before user login into system, system are going to check username, and password
         String user,password;
+
         user=un.getText().toString();
         password=pw.getText().toString();
         databaseReference= FirebaseDatabase.getInstance().getReference("UsersVer2");
@@ -86,16 +87,19 @@ public class Login extends AppCompatActivity {
                         //If password match
                         //Create intent to homepage
                         int isAdmin=snapshot.child(user).child("isAdmin").getValue(Integer.class);
+                        int point=snapshot.child(user).child("isAdmin").getValue(Integer.class);
                         if (isAdmin==1){
                             Intent intent = new Intent(Login.this, UserProfile.class);
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
+                            intent.putExtra("CurrentPoints",point);
                             startActivity(intent);
                         }
                         else {
                             Intent intent = new Intent(Login.this, UserProfile.class);
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
+                            intent.putExtra("CurrentPoints",point);
                             startActivity(intent);
                         }
 

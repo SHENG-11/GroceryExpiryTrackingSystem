@@ -24,7 +24,7 @@ public class User_View_Mission extends AppCompatActivity {
     DatabaseReference databaseReference;
     MissionAdapter2 adapter2;
     String username="";
-    int admin;
+    int admin,point;
     ValueEventListener valueEventListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,8 @@ public class User_View_Mission extends AppCompatActivity {
             //Get bundle information
             username=bundle.getString("username");
             admin=bundle.getInt("isAdmin");
-            adapter2=new MissionAdapter2(MissionList,User_View_Mission.this,admin,username);
+            point=bundle.getInt("CurrentPoints");
+            adapter2=new MissionAdapter2(User_View_Mission.this,MissionList,User_View_Mission.this,admin,username,point);
             rv_mission.setAdapter(adapter2); // set it into recycleview
             databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
 

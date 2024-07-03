@@ -31,7 +31,6 @@ public class UserProfile extends AppCompatActivity {
     StorageReference storageReference;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +40,7 @@ public class UserProfile extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");//geting string from previous activity
         int isAdmin=intent.getIntExtra("isAdmin",0);
+        int point=intent.getIntExtra("CurrentPoints",0);
         if (username != null) {
             readUser(username);//calling function at below
         } else {
@@ -53,6 +53,7 @@ public class UserProfile extends AppCompatActivity {
                 Intent intent=new Intent(UserProfile.this, Admin_Mission.class);
                 intent.putExtra("username",username);
                 intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
                 startActivity(intent);
             }
         });
@@ -70,10 +71,12 @@ public class UserProfile extends AppCompatActivity {
                         DataSnapshot dataSnapshot = task.getResult();//data snapshot contain data from a firebase database location
                         String username = String.valueOf(dataSnapshot.child("username").getValue());
                         String phonenumber = String.valueOf(dataSnapshot.child("phoneNumber").getValue());
-                        String fullname = String.valueOf(dataSnapshot.child("username").getValue());
+                        String fullname = String.valueOf(dataSnapshot.child("fullname").getValue());
+                        int point=dataSnapshot.child("points").getValue(Integer.class);
                         binding.fullname1.setText(fullname);
                         binding.username1.setText(username);
                         binding.hpNum1.setText(phonenumber);
+                        binding.pointBonus.setText(Integer.toString(point));
                         try {
                             File localfile = File.createTempFile("tempfile", ".jpg");
                             storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

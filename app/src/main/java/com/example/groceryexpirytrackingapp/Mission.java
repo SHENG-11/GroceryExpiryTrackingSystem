@@ -1,7 +1,8 @@
 package com.example.groceryexpirytrackingapp;
 
 public class Mission {
-    String title,status,desc,assignTo,point,key;
+    String title,status,desc,assignTo,key;
+    int points;
 
     public Mission() {
     }
@@ -14,20 +15,20 @@ public class Mission {
         this.key = key;
     }
 
-    public Mission(String title, String status, String desc, String assignTo, String point) {
+    public Mission(String title, String status, String desc, String assignTo, int points) {
         this.title = title;
         this.status = status;
         this.desc = desc;
         this.assignTo = assignTo;
-        this.point = point;
+        this.points = points;
     }
 
-    public String getPoint() {
-        return point;
+    public int getPoints() {
+        return points;
     }
 
-    public void setPoint(String point) {
-        this.point = point;
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public String getTitle() {

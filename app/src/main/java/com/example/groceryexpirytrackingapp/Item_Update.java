@@ -47,7 +47,6 @@ public class Item_Update extends AppCompatActivity {
     TextInputEditText itemName, numberOfitem;
     TextInputEditText purchase, expire, barcode1;
     StorageReference storageReference= FirebaseStorage.getInstance().getReference();
-
     String Item_name, Item_exp_date, Item_purchasedate, Item_barcode, Item_ImageUrlOld;
     int NumOfItem;
     DatabaseReference reference,reference2;

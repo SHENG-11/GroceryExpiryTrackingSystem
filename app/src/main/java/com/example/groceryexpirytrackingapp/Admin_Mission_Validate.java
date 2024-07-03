@@ -16,11 +16,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Admin_Mission_Validate extends AppCompatActivity {
-    TextView title,desc,point;
-    String Key="";
-    String description,missiontitle,points,staff;
+    TextView title,desc,tvpoint;
+    String username,Key="";
+    int point1,points;
+    String description,missiontitle,staff;
     Button delete,validate;//delete mission or validate it
-    DatabaseReference reference;
+    DatabaseReference reference,reference1;
 
 
     @Override
@@ -29,9 +30,10 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         setContentView(R.layout.activity_admin_mission_validate);
         title=findViewById(R.id.mission_title2);
         desc=findViewById(R.id.mission_desc2);
-        point=findViewById(R.id.mission_reward2);
+        tvpoint=findViewById(R.id.mission_reward2);
         delete=findViewById(R.id.btn_delete_reject);
         validate=findViewById(R.id.btn_confirm_mission);
+
         //End of find view by id
 
         //Bundle Handle
@@ -42,6 +44,8 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         //>>>>>>>>>>>>>>>>>>>>>>>>>
         if (staff.equals("All")){
             validate.setEnabled(false);
+        }else {
+            validate.setEnabled(true);
         }
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,19 +67,46 @@ public class Admin_Mission_Validate extends AppCompatActivity {
             }
         });
         //Validate button havent set
+        validate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get current point + mission point; update user's points,and mission status
+                point1=point1+points;
+                reference = FirebaseDatabase.getInstance().getReference("MissionList").child(Key);
+                Mission m1 = new Mission(missiontitle, "Completed", description, staff, points);
+                reference.setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        reference1=FirebaseDatabase.getInstance().getReference("UsersVer2").child(staff);
+                        
+                        reference1.child("points").setValue(point1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(Admin_Mission_Validate.this, "Add points successful", Toast.LENGTH_SHORT).show();
+                                Intent intent =new Intent(Admin_Mission_Validate.this, Admin_Mission.class);
+                                startActivity(intent);
+                            }
+                        });
+                    }
 
+            });
 
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    }
+        });
     }
     public void InfogetAndSet(Bundle bundle){
         //get bundle from last activities "MissionAdapter2"
         Key = bundle.getString("Key");
         missiontitle=bundle.getString("Title");
         description=bundle.getString("Desc");
-        points=bundle.getString("Points");
-        staff=bundle.getString("People");
+        points=bundle.getInt("Points");//Mission Point
+        point1=bundle.getInt("CurrentPoints");//Acc current point
+        staff=bundle.getString("People");//specific users
+        username=bundle.getString("CurrentStaff"); //current users
         //Set it into TV
         title.setText(missiontitle);
         desc.setText(description);
-        point.setText(points);
+        tvpoint.setText(Integer.toString(points));
     }
 }
