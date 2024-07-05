@@ -15,6 +15,7 @@ import com.example.groceryexpirytrackingapp.databinding.ActivityUserProfileBindi
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,7 +30,8 @@ public class UserProfile extends AppCompatActivity {
     ActivityUserProfileBinding binding;
     DatabaseReference reference;
     StorageReference storageReference;
-
+    String username;
+    int isAdmin,point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +39,53 @@ public class UserProfile extends AppCompatActivity {
         //setContentView(R.layout.activity_user_profile);
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //Bundle get intent
+        Bundle bundle=getIntent().getExtras();
+        StartgetIntent(bundle);
+        //Bottom Navigation set
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_profile);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId()==R.id.bottom_home){
+                Intent intent=new Intent(UserProfile.this, MainActivity.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            } else if (item.getItemId()==R.id.bottom_mission) {
+                Intent intent=new Intent(UserProfile.this, Admin_Mission.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId()==R.id.bottom_done) {
+                Intent intent=new Intent(UserProfile.this, Admin_Mission_PendingList.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId()==R.id.bottom_profile) {
+                return true;
+            }
+            return false;
+        });
+        //>>>>>>>>>>>>>>>>>>>>>>>>
+        /*
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");//geting string from previous activity
-        int isAdmin=intent.getIntExtra("isAdmin",0);
-        int point=intent.getIntExtra("CurrentPoints",0);
-        if (username != null) {
-            readUser(username);//calling function at below
-        } else {
-            Toast.makeText(this, "Please relogin to the system", Toast.LENGTH_SHORT).show();
-        }
+        username = intent.getStringExtra("username");//geting string from previous activity
+        isAdmin=intent.getIntExtra("isAdmin",0);
+        point=intent.getIntExtra("CurrentPoints",0);
+         */
 
         binding.btnToAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +109,7 @@ public class UserProfile extends AppCompatActivity {
                 if (task.isSuccessful()) {//if geting username successful do the task below
                     if (task.getResult().exists()) {
                         DataSnapshot dataSnapshot = task.getResult();//data snapshot contain data from a firebase database location
-                        String username = String.valueOf(dataSnapshot.child("username").getValue());
+                        //String username = String.valueOf(dataSnapshot.child("username").getValue());
                         String phonenumber = String.valueOf(dataSnapshot.child("phoneNumber").getValue());
                         String fullname = String.valueOf(dataSnapshot.child("fullname").getValue());
                         int point=dataSnapshot.child("points").getValue(Integer.class);
@@ -93,5 +133,17 @@ public class UserProfile extends AppCompatActivity {
                 }
             }
         });
+    }
+    void StartgetIntent(Bundle bundle){
+            username=bundle.getString("username");
+            isAdmin=bundle.getInt("isAdmin");
+            point=bundle.getInt("CurrentPoints");
+
+        if (username != null) {
+            readUser(username);//calling function at below
+        } else {
+            Toast.makeText(this, "Please relogin to the system", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

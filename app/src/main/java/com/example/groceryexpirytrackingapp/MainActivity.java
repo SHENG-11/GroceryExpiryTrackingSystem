@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import com.example.groceryexpirytrackingapp.databinding.ActivityMainBinding;
 import com.example.groceryexpirytrackingapp.databinding.ActivityUserProfileBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     ItemAdapter itemAdapter;
     ImageView scanBarcode;
+    String username;
+    int isAdmin,point;
+
 
 
     @Override
@@ -47,6 +51,46 @@ public class MainActivity extends AppCompatActivity {
         searchView=findViewById(R.id.search1);
         searchView.clearFocus();
         scanBarcode=findViewById(R.id.scanBarCode1);
+        //Bundle get intent
+        Bundle bundle=getIntent().getExtras();
+        StartgetIntent(bundle);
+        //Bottom Navigation set
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId()==R.id.bottom_home){
+                return true;
+            } else if (item.getItemId()==R.id.bottom_mission) {
+                Intent intent=new Intent(MainActivity.this, Admin_Mission.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId()==R.id.bottom_done) {
+                Intent intent=new Intent(MainActivity.this, Admin_Mission_PendingList.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId()==R.id.bottom_profile) {
+                Intent intent=new Intent(MainActivity.this, UserProfile.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
         //>>>>>>>>>>>>>>>>>>>>>>>>
         scanBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,4 +179,10 @@ public class MainActivity extends AppCompatActivity {
         }
     });
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    void StartgetIntent(Bundle bundle){
+        username=bundle.getString("username");
+        isAdmin=bundle.getInt("isAdmin");
+        point=bundle.getInt("CurrentPoints");
+
+    }
 }

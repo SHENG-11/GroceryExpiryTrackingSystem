@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,71 +9,81 @@
     android:gravity="center"
     tools:context=".UserProfile">
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        >
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
 
-        <LinearLayout
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="5dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="50dp">
+
+            <ImageView
+                android:id="@+id/userPicture1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/username1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:text="@string/username" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:cardCornerRadius="50dp"
-                android:layout_margin="5dp"
-                android:elevation="10dp">
-                <ImageView
-                    android:id="@+id/userPicture1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/profile"
-                    android:scaleType="centerCrop"/>
-            </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/hpNum1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Phone Number" />
 
-            <TextView
-                android:id="@+id/username1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/username" />
+        <TextView
+            android:id="@+id/fullname1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/full_name" />
 
-            <TextView
-                android:id="@+id/hpNum1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Phone Number" />
+        <TextView
+            android:id="@+id/pointBonus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Points/Bonus" />
 
-            <TextView
-                android:id="@+id/fullname1"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/full_name" />
-
-            <TextView
-                android:id="@+id/pointBonus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Points/Bonus" />
-
-            <Button
-                android:id="@+id/btn_to_add_Item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mission"
-                />
+        <Button
+            android:id="@+id/btn_to_add_Item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mission" />
 
 
+    </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/bottomNavigationView"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bottom_background"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:elevation="2dp"
+        app:menu="@menu/bottom_menu"
+        app:itemIconSize="30dp"
+        app:itemIconTint="@drawable/item_selector"
+        app:itemRippleColor="@android:color/transparent"
+        app:labelVisibilityMode="unlabeled"
+        />
+</RelativeLayout>

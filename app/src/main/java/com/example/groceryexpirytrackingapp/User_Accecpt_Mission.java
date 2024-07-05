@@ -111,7 +111,11 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
                     validate.setVisibility(View.GONE);
                     validate.setEnabled(false);
                     Message.setText("Mission Is Validating");
-                }else{
+                } else if (status.equals("Completed")) {
+                    validate.setVisibility(View.GONE);
+                    validate.setEnabled(false);
+                    Message.setText("Congratulation! You get your reward");
+                } else{
                 validate.setVisibility(View.VISIBLE);
                 validate.setEnabled(true);
                 }

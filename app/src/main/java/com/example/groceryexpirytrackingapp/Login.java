@@ -89,14 +89,14 @@ public class Login extends AppCompatActivity {
                         int isAdmin=snapshot.child(user).child("isAdmin").getValue(Integer.class);
                         int point=snapshot.child(user).child("isAdmin").getValue(Integer.class);
                         if (isAdmin==1){
-                            Intent intent = new Intent(Login.this, UserProfile.class);
+                            Intent intent = new Intent(Login.this, MainActivity.class);
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
                             intent.putExtra("CurrentPoints",point);
                             startActivity(intent);
                         }
                         else {
-                            Intent intent = new Intent(Login.this, UserProfile.class);
+                            Intent intent = new Intent(Login.this, MainActivity.class);
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
                             intent.putExtra("CurrentPoints",point);

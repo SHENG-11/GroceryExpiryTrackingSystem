@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,19 +36,60 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
     List<Mission> MissionList;
     MissionAdapter2 adapter2;
     String username="";
-    int admin,point;
+    int isAdmin,point;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_mission);
+        //Find view by id
         recyclerView=findViewById(R.id.recycleView_item);
         fat=findViewById(R.id.btn_floating_add_mission);
         swipeRefreshLayout=findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-
         //>>end of find view of id
+        //Bundle get intent
+        Bundle bundle=getIntent().getExtras();
+        StartgetIntent(bundle);
+        //Bottom Navigation set
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_mission);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId()==R.id.bottom_home){
+                Intent intent=new Intent(Admin_Mission.this, MainActivity.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            } else if (item.getItemId()==R.id.bottom_mission) {
+                return true;
+            }else if (item.getItemId()==R.id.bottom_done) {
+                Intent intent=new Intent(Admin_Mission.this, Admin_Mission_PendingList.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }else if (item.getItemId()==R.id.bottom_profile) {
+                Intent intent=new Intent(Admin_Mission.this, UserProfile.class);
+                intent.putExtra("username",username);
+                intent.putExtra("isAdmin",isAdmin);
+                intent.putExtra("CurrentPoints",point);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                finish();
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+        //>>>>>>>>>>>>>>>>>>>>>>>>
 
         fat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,17 +105,17 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
         MissionList=new ArrayList<>();
         recyclerView.setAdapter(adapter2); // set it into recycleview
 
-        Bundle bundle=getIntent().getExtras();
+
         if (bundle!=null){
             //Get bundle information
             username=bundle.getString("username");
-            admin=bundle.getInt("isAdmin");
+            isAdmin=bundle.getInt("isAdmin");
             point=bundle.getInt("CurrentPoints");
 
-            adapter2=new MissionAdapter2(Admin_Mission.this,MissionList,Admin_Mission.this,admin,username,point);
+            adapter2=new MissionAdapter2(Admin_Mission.this,MissionList,Admin_Mission.this,isAdmin,username,point);
             recyclerView.setAdapter(adapter2); // set it into recycleview
             databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
-            if (admin==0){// if the user was not admin, we set the adapter with status available and disable the floating action button
+            if (isAdmin==0){// if the user was not admin, we set the adapter with status available and disable the floating action button
                 fat.setVisibility(View.GONE);
                 fat.setEnabled(false);
                 Query q1=databaseReference.orderByChild("status").equalTo("Available");
@@ -92,7 +134,7 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
 
                     }
                 });
-            }else if (admin==1) {
+            }else if (isAdmin==1) {
                 fat.setVisibility(View.VISIBLE);
                 fat.setEnabled(true);
                 valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
@@ -150,5 +192,11 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
         if (requestCode==1){
             onRefresh();
         }
+    }
+    void StartgetIntent(Bundle bundle){
+        username=bundle.getString("username");
+        isAdmin=bundle.getInt("isAdmin");
+        point=bundle.getInt("CurrentPoints");
+
     }
 }
