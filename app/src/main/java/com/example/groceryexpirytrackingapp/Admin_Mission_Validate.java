@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,12 +52,18 @@ public class Admin_Mission_Validate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 reference= FirebaseDatabase.getInstance().getReference("MissionList");
+                AlertDialog.Builder builder = new AlertDialog.Builder(Admin_Mission_Validate.this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.progress);
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 reference.child(Key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        dialog.dismiss();
                         Toast.makeText(Admin_Mission_Validate.this, "Delete Mission Complete", Toast.LENGTH_SHORT).show();
-                        Intent intent =new Intent(Admin_Mission_Validate.this, Admin_Mission.class);
-                        startActivity(intent);
+                        finish();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -70,6 +77,12 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //AlertBox dialog handle
+                AlertDialog.Builder builder = new AlertDialog.Builder(Admin_Mission_Validate.this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.progress);
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 //get current point + mission point; update user's points,and mission status
                 point1=point1+points;
                 reference = FirebaseDatabase.getInstance().getReference("MissionList").child(Key);
@@ -82,9 +95,15 @@ public class Admin_Mission_Validate extends AppCompatActivity {
                         reference1.child("points").setValue(point1).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                dialog.dismiss();
                                 Toast.makeText(Admin_Mission_Validate.this, "Add points successful", Toast.LENGTH_SHORT).show();
-                                Intent intent =new Intent(Admin_Mission_Validate.this, Admin_Mission.class);
-                                startActivity(intent);
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            dialog.dismiss();
+                                Toast.makeText(Admin_Mission_Validate.this, "Mission validate fail", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

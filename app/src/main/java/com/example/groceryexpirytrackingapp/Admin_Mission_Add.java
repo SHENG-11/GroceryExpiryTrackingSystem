@@ -41,9 +41,11 @@ Activity activity;
                 if (validation()){
                     UploadToFireBase();
                     //to thank you page
+                    Intent intent=new Intent(Admin_Mission_Add.this,MainActivity.class);
+                    startActivity(intent);
                 }
                 else {
-                    Toast.makeText(Admin_Mission_Add.this, "False", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Admin_Mission_Add.this, "Add Mission Fail", Toast.LENGTH_SHORT).show();
                 }
 
             }

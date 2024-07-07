@@ -16,6 +16,9 @@
         android:theme="@style/Theme.GroceryExpiryTrackingApp"
         tools:targetApi="31">
         <activity
+            android:name=".update_message"
+            android:exported="false" />
+        <activity
             android:name=".Admin_Mission_PendingList"
             android:exported="false" />
         <activity
@@ -32,9 +35,7 @@
             android:exported="true" />
         <activity
             android:name=".Admin_Mission"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Motion"
             android:exported="true" />
@@ -52,9 +53,7 @@
             android:exported="true" />
         <activity
             android:name=".UserProfile"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Register"
             android:exported="true" />

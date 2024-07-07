@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,18 +59,27 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
             public void onClick(View v) {
                 //this reference find missionlist with exact key
                 reference = FirebaseDatabase.getInstance().getReference("MissionList").child(Key);
+                //AlertBox dialog handle
+                AlertDialog.Builder builder = new AlertDialog.Builder(User_Accecpt_Mission.this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.progress);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Mission m1 = new Mission(missiontitle, "InProgress", description, username, points);
                 reference.setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        dialog.dismiss();
                         Toast.makeText(User_Accecpt_Mission.this, "Missions Accepts", Toast.LENGTH_SHORT).show();
                         accept.setEnabled(false);
+                        finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        dialog.dismiss();
                         Toast.makeText(User_Accecpt_Mission.this, "Mission Take Fail", Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
@@ -80,12 +90,21 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
             public void onClick(View v) {
                 //validate mean update status to "pending"
                 reference = FirebaseDatabase.getInstance().getReference("MissionList").child(Key);
+                //AlertBox dialog handle
+                AlertDialog.Builder builder = new AlertDialog.Builder(User_Accecpt_Mission.this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.progress);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                //>>>>>>>>>>>>>>>>>
                 Mission m1 = new Mission(missiontitle, "Pending", description, username, points);
                 reference.setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        dialog.dismiss();
                         Toast.makeText(User_Accecpt_Mission.this, "sent to validate", Toast.LENGTH_SHORT).show();
                         validate.setEnabled(false);
+                        finish();
                     }
                 });
             }

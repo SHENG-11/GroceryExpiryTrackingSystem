@@ -5,12 +5,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.groceryexpirytrackingapp.databinding.ActivityMainBinding;
 import com.example.groceryexpirytrackingapp.databinding.ActivityUserProfileBinding;
@@ -27,7 +31,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     RecyclerView recyclerView;
     FloatingActionButton fat;
     List<ItemVer1> itemVer1s;
@@ -38,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView scanBarcode;
     String username;
     int isAdmin,point;
-
-
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         searchView=findViewById(R.id.search1);
         searchView.clearFocus();
         scanBarcode=findViewById(R.id.scanBarCode1);
+        //Swipe Refresh Layout
+        swipeRefreshLayout=findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
         //Bundle get intent
         Bundle bundle=getIntent().getExtras();
         StartgetIntent(bundle);
@@ -184,5 +190,14 @@ public class MainActivity extends AppCompatActivity {
         isAdmin=bundle.getInt("isAdmin");
         point=bundle.getInt("CurrentPoints");
 
+    }
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
     }
 }

@@ -111,53 +111,22 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
             username=bundle.getString("username");
             isAdmin=bundle.getInt("isAdmin");
             point=bundle.getInt("CurrentPoints");
-
             adapter2=new MissionAdapter2(Admin_Mission.this,MissionList,Admin_Mission.this,isAdmin,username,point);
             recyclerView.setAdapter(adapter2); // set it into recycleview
+
             databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
             if (isAdmin==0){// if the user was not admin, we set the adapter with status available and disable the floating action button
                 fat.setVisibility(View.GONE);
                 fat.setEnabled(false);
-                Query q1=databaseReference.orderByChild("status").equalTo("Available");
-                valueEventListener=q1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        MissionList.clear();
-                        for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                            Mission m1=itemSnapshot.getValue(Mission.class);
-                            m1.setKey(itemSnapshot.getKey());
-                            MissionList.add(m1);
-                        }
-                        adapter2.notifyDataSetChanged();
-                    }
-                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
             }else if (isAdmin==1) {
                 fat.setVisibility(View.VISIBLE);
                 fat.setEnabled(true);
-                valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        MissionList.clear();
-                        for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                            Mission m1=itemSnapshot.getValue(Mission.class);
-                            m1.setKey(itemSnapshot.getKey());
-                            MissionList.add(m1);
-                        }
-                        adapter2.notifyDataSetChanged();
-                    }
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
         }
 
-        databaseReference= FirebaseDatabase.getInstance().getReference("MissionList");
-        //Query q1=databaseReference.orderByChild("status").equalTo("Available");
-        valueEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
+        Query q1=databaseReference.orderByChild("status").equalTo("Available");//select miss
+        valueEventListener=q1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MissionList.clear();
@@ -168,12 +137,11 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
                 }
                 adapter2.notifyDataSetChanged();
             }
-
-            @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
 
     }
 
@@ -181,18 +149,14 @@ public class Admin_Mission extends AppCompatActivity implements SwipeRefreshLayo
     public void onRefresh() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
-            public void run() {Toast.makeText(Admin_Mission.this, "Refresh", Toast.LENGTH_SHORT).show();
+            public void run() {
+            Toast.makeText(Admin_Mission.this, "Refresh", Toast.LENGTH_SHORT).show();
             swipeRefreshLayout.setRefreshing(false);
             }
         },1000);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            onRefresh();
-        }
-    }
+
     void StartgetIntent(Bundle bundle){
         username=bundle.getString("username");
         isAdmin=bundle.getInt("isAdmin");

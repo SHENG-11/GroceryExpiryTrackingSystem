@@ -85,7 +85,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Congratulation! You get your reward"
+                            android:text=""
                             android:gravity="center" />
 
                     </LinearLayout>
@@ -101,7 +101,6 @@
                             android:id="@+id/btn_accept_mission"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="20dp"
                             android:text="Accept Mission" />
@@ -110,7 +109,6 @@
                             android:id="@+id/btn_mission_complete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="20dp"
                             android:text="Mission Done" />

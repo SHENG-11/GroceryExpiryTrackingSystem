@@ -22,8 +22,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -224,6 +227,11 @@ public class Item_add extends AppCompatActivity {
         //specifies image get instances & reference
 
         StorageReference imageReference=storageReference.child("ItemPic/"+Item_name+"."+getFileExtension(imageUri));
+        AlertDialog.Builder builder = new AlertDialog.Builder(Item_add.this);
+        builder.setCancelable(false);
+        builder.setView(R.layout.progress);
+        AlertDialog dialog = builder.create();
+        dialog.show();
         imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -233,7 +241,14 @@ public class Item_add extends AppCompatActivity {
                         Item_ImageUrl=uri.toString();
                         ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl,NumOfItem);
                         reference = FirebaseDatabase.getInstance().getReference("ItemList");
-                        reference.child(Item_name).setValue(i1);
+                        reference.child(Item_name).setValue(i1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                            dialog.dismiss();
+                                Toast.makeText(Item_add.this, "Item Add", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
                     }
                 });
             }

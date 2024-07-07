@@ -13,6 +13,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -52,7 +53,7 @@ public class Item_Update extends AppCompatActivity {
     DatabaseReference reference,reference2;
     FloatingActionButton delete, update;
     String key = "";
-    String imageurl = "";
+    String imageurl;
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
             String barcode = result.getContents();
@@ -101,9 +102,7 @@ public class Item_Update extends AppCompatActivity {
                         } else {
                             Toast.makeText(Item_Update.this, "No Image Select", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    ;
+                    };
                 });
         ItemImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,15 +161,33 @@ public class Item_Update extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Item_Update.this);
+                builder.setCancelable(false);
+                builder.setView(R.layout.progress);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 reference = FirebaseDatabase.getInstance().getReference("ItemList");
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageReference1 = storage.getReferenceFromUrl(Item_ImageUrlOld);
                 storageReference1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        reference.child(key).removeValue();
-                        Toast.makeText(Item_Update.this, "Item Delete", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        reference.child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dialog.dismiss();
+                                Toast.makeText(Item_Update.this, "Item Delete", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Item_Update.this, "Delete Fail", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+                        
                     }
                 });
             }
@@ -249,45 +266,38 @@ public class Item_Update extends AppCompatActivity {
 
     void SaveData() {
         //specifies image get instances & reference
-        if (imageUri != null) {//imageUri is new uri
+        if (imageUri != null) {//new image set
             Item_name = itemName.getText().toString();
+            AlertDialog.Builder builder = new AlertDialog.Builder(Item_Update.this);
+            builder.setCancelable(false);
+            builder.setView(R.layout.progress);
+            AlertDialog dialog = builder.create();
+            dialog.show();
             StorageReference imageReference = FirebaseStorage.getInstance().getReference("ItemPic/").child(Item_name+"."+getFileExtension(imageUri));
             imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                // in this stage, new image is successfully add and call next functions
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            imageurl = uri.toString();
-                            updateData();
+                            imageurl = uri.toString();//uri convert to string and then save into image url
+                            updateData(); // with new image url
+                            dialog.dismiss();
                         }
                     });
                 }
             });
         }
-        else{
-            imageurl = Item_ImageUrlOld;
-            Item_name = itemName.getText().toString();
-            StorageReference imageReference = storageReference.child("ItemPic"+Item_name + "." + getFileExtension(imageUri));
-            imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            imageurl = uri.toString();
-                            updateData();
-                        }
-                    });
-                }
-            });
+        else {
+            // old image used, meaning that, not need to update images
+            Toast.makeText(this, "Please choose new images", Toast.LENGTH_SHORT).show();
         }
 
-        //updateData();
     }
 
-    void updateData() {
 
+    void updateData() {
         Item_name = itemName.getText().toString();
         Item_exp_date = expire.getText().toString();
         Item_purchasedate = purchase.getText().toString();
@@ -296,17 +306,21 @@ public class Item_Update extends AppCompatActivity {
         ItemVer1 i1 = new ItemVer1(Item_name, Item_exp_date, Item_purchasedate, Item_barcode, imageurl, NumOfItem);
 
 
-        reference = FirebaseDatabase.getInstance().getReference("ItemList").child(Item_name);
+
+
+        reference = FirebaseDatabase.getInstance().getReference("ItemList").child(Item_name);//new name
         reference.setValue(i1).addOnCompleteListener(new OnCompleteListener<Void>() {
+            //set new value into child
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 StorageReference reference1 = FirebaseStorage.getInstance().getReferenceFromUrl(Item_ImageUrlOld);
-                reference1.delete();
+                reference1.delete(); // delete old image
                 reference2=FirebaseDatabase.getInstance().getReference("ItemList");
                 reference2.child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(Item_Update.this, "Update", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
