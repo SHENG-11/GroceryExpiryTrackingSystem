@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -39,10 +40,10 @@ public class Register extends AppCompatActivity {
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     ImageView uploadProfileImage;
     TextInputEditText username,password,password1,phoneNumber,fullName;
-    Button btn_Register;
+    Button clcikLoginl;
     String pw,pnum,fn;
     DatabaseReference reference;
-    TextView clcikLoginl;
+    AppCompatButton btn_Register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
