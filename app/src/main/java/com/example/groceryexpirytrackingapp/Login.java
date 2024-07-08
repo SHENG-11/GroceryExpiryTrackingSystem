@@ -2,12 +2,14 @@ package com.example.groceryexpirytrackingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,9 +25,10 @@ import java.util.Objects;
 
 public class Login extends AppCompatActivity {
     TextInputEditText un,pw;
-    Button btn_login1;
     DatabaseReference databaseReference;
-    TextView click_to_reg;
+    Button click_to_reg;
+    AppCompatButton btn_login1;
+    ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class Login extends AppCompatActivity {
         //Find view by id
         un=findViewById(R.id.username);
         pw=findViewById(R.id.login_pass);
+        pb=findViewById(R.id.progressBar1);
+        pb.setVisibility(View.INVISIBLE);
         btn_login1=findViewById(R.id.btn_login);
         click_to_reg=findViewById(R.id.click_to_register);
         //>>>>>>>>>>>>>>>>>>>>>>>.
@@ -48,7 +53,9 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(inputValidat()){
+                pb.setVisibility(View.VISIBLE);
                 validuser();
+
                 }
                 else{
                     Toast.makeText(Login.this, "Please Check all field", Toast.LENGTH_SHORT).show();
@@ -93,6 +100,7 @@ public class Login extends AppCompatActivity {
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
                             intent.putExtra("CurrentPoints",point);
+                            pb.setVisibility(View.INVISIBLE);
                             startActivity(intent);
                         }
                         else {
@@ -100,6 +108,7 @@ public class Login extends AppCompatActivity {
                             intent.putExtra("username",user);
                             intent.putExtra("isAdmin",isAdmin);
                             intent.putExtra("CurrentPoints",point);
+                            pb.setVisibility(View.INVISIBLE);
                             startActivity(intent);
                         }
 
