@@ -87,16 +87,7 @@ public class UserProfile extends AppCompatActivity {
         point=intent.getIntExtra("CurrentPoints",0);
          */
 
-        binding.btnToAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(UserProfile.this, Admin_Mission.class);
-                intent.putExtra("username",username);
-                intent.putExtra("isAdmin",isAdmin);
-                intent.putExtra("CurrentPoints",point);
-                startActivity(intent);
-            }
-        });
+
 
     }
 
