@@ -11,12 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> {
     List<ItemVer1> itemList;
     Context context;
+    Date expiredate;
 
 
     public ItemAdapter(Context context, List<ItemVer1> itemList) {
@@ -33,10 +41,25 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        //expire date from firebase
+        String expDate=itemList.get(position).getExp_date();
+        //convert current date from String to Date format
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+           expiredate=sdf.parse(expDate);//this is exxp date
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        Date c1 = Calendar.getInstance().getTime(); //current date
+        long diff = expiredate.getTime()-c1.getTime();
+        Long ans=TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
 
         holder.name.setText(itemList.get(position).getName());
         holder.barcode.setText(itemList.get(position).getBarcode());
-        holder.dayLeft.setText(itemList.get(position).getExp_date());
+        holder.dayLeft.setText(Long.toString(ans));
+
 
         holder.itemCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +87,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
         itemList=searchList;
         notifyDataSetChanged();
     }
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView name,dayLeft,barcode;
         CardView itemCard;

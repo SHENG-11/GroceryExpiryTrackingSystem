@@ -28,9 +28,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,12 +48,13 @@ import java.util.Calendar;
 public class Item_Update extends AppCompatActivity {
     Uri imageUri;
     ImageView ItemImage;
+    ValueEventListener valueEventListener;
     TextInputEditText itemName, numberOfitem;
     TextInputEditText purchase, expire, barcode1;
     StorageReference storageReference= FirebaseStorage.getInstance().getReference();
-    String Item_name, Item_exp_date, Item_purchasedate, Item_barcode, Item_ImageUrlOld;
+    String Item_name, Item_exp_date, Item_purchasedate, Item_barcode, Item_ImageUrlOld,oldItemName;
     int NumOfItem;
-    DatabaseReference reference,reference2;
+    DatabaseReference reference,reference2,reference3;
     FloatingActionButton delete, update;
     String key = "";
     String imageurl;
@@ -82,7 +86,19 @@ public class Item_Update extends AppCompatActivity {
             ActiongetIntent(bundle);
             key = bundle.getString("key");
             Item_ImageUrlOld = bundle.getString("Image");
+            reference3=FirebaseDatabase.getInstance().getReference().child("ItemList");
+            //databaseReference.addValueEventListener(new ValueEventListener()
+            valueEventListener = reference3.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                     oldItemName = dataSnapshot.child(key).child("name").getValue(String.class);
+                }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                }
+            });
         }
         //Calender details
         Calendar calendar = Calendar.getInstance();
@@ -268,11 +284,13 @@ public class Item_Update extends AppCompatActivity {
         //specifies image get instances & reference
         if (imageUri != null) {//new image set
             Item_name = itemName.getText().toString();
+            //alert dialog box setup
             AlertDialog.Builder builder = new AlertDialog.Builder(Item_Update.this);
             builder.setCancelable(false);
             builder.setView(R.layout.progress);
             AlertDialog dialog = builder.create();
             dialog.show();
+            //annimation show
             StorageReference imageReference = FirebaseStorage.getInstance().getReference("ItemPic/").child(Item_name+"."+getFileExtension(imageUri));
             imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 // in this stage, new image is successfully add and call next functions
@@ -305,9 +323,6 @@ public class Item_Update extends AppCompatActivity {
         NumOfItem = Integer.parseInt(numberOfitem.getText().toString());
         ItemVer1 i1 = new ItemVer1(Item_name, Item_exp_date, Item_purchasedate, Item_barcode, imageurl, NumOfItem);
 
-
-
-
         reference = FirebaseDatabase.getInstance().getReference("ItemList").child(Item_name);//new name
         reference.setValue(i1).addOnCompleteListener(new OnCompleteListener<Void>() {
             //set new value into child
@@ -315,19 +330,26 @@ public class Item_Update extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 StorageReference reference1 = FirebaseStorage.getInstance().getReferenceFromUrl(Item_ImageUrlOld);
                 reference1.delete(); // delete old image
-                reference2=FirebaseDatabase.getInstance().getReference("ItemList");
-                reference2.child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(Item_Update.this, "Update", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Item_Update.this, "Update Fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if (Item_name.toLowerCase().equals(oldItemName.toLowerCase())){
+                    Toast.makeText(Item_Update.this, "Update", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                else{
+                    reference2=FirebaseDatabase.getInstance().getReference("ItemList");
+                    reference2.child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {//because got remove old one, so if same name will be remove
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(Item_Update.this, "Update", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Item_Update.this, "Update Fail", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

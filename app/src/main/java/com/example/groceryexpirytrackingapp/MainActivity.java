@@ -8,16 +8,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.groceryexpirytrackingapp.databinding.ActivityMainBinding;
 import com.example.groceryexpirytrackingapp.databinding.ActivityUserProfileBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -25,9 +29,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     ValueEventListener valueEventListener;
     SearchView searchView;
     ItemAdapter itemAdapter;
-    ImageView scanBarcode;
+    ImageView scanBarcode,userAvatar;
+    StorageReference storageReference;
+    TextView usernameset;
     String username;
     int isAdmin,point;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -52,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView=findViewById(R.id.recycleView_item);
         fat=findViewById(R.id.btn_floating_add);
         searchView=findViewById(R.id.search1);
+        usernameset=findViewById(R.id.username3);
+
+        userAvatar=findViewById(R.id.userPicture1);
         searchView.clearFocus();
         scanBarcode=findViewById(R.id.scanBarCode1);
         //Swipe Refresh Layout
@@ -113,6 +127,19 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 startActivity(intent);
             }
         });
+        storageReference = FirebaseStorage.getInstance().getReference("Users/"+username + ".jpg");
+        try {
+            File localfile = File.createTempFile("tempfile", ".jpg");
+            storageReference.getFile(localfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localfile.getAbsolutePath());
+                    userAvatar.setImageBitmap(bitmap);
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //RecycleView Setup
         GridLayoutManager gridLayoutManager=new GridLayoutManager(MainActivity.this,1);
@@ -187,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>
     void StartgetIntent(Bundle bundle){
         username=bundle.getString("username");
+        usernameset.setText(" "+username);
         isAdmin=bundle.getInt("isAdmin");
         point=bundle.getInt("CurrentPoints");
 

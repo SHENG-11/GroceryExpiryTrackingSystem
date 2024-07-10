@@ -19,6 +19,7 @@
     <string name="mission_title">Mission Title</string>
     <string name="mission_desc">Mission Desc</string>
     <string name="reward_point">Reward Point</string>
+    <string name="welcome_to_our_family">Welcome to our family, </string>
 
     <string-array name="item_cat">
         <item>Frozen Food</item>
