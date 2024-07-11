@@ -53,12 +53,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
         Date c1 = Calendar.getInstance().getTime(); //current date
         long diff = expiredate.getTime()-c1.getTime();
         Long ans=TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-
+        if (ans < 14){
+            //myTV.setTextColor(getResources().getColor(R.color.negativeColor));
+            holder.dayLeft.setText(Long.toString(ans));
+            holder.dayLeft.setTextColor(context.getColor(R.color.red));
+        }
+        else {
+            holder.dayLeft.setText(Long.toString(ans));
+        }
 
         holder.name.setText(itemList.get(position).getName());
         holder.barcode.setText(itemList.get(position).getBarcode());
-        holder.dayLeft.setText(Long.toString(ans));
-
 
         holder.itemCard.setOnClickListener(new View.OnClickListener() {
             @Override

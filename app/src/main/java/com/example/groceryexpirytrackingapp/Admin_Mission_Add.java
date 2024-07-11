@@ -2,8 +2,10 @@ package com.example.groceryexpirytrackingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Admin_Mission_Add extends AppCompatActivity {
 TextInputEditText title,desc,rewardPoint;
-Button add_mission;
+AppCompatButton add_mission;
 DatabaseReference reference;
 Activity activity;
 
@@ -41,8 +43,6 @@ Activity activity;
                 if (validation()){
                     UploadToFireBase();
                     //to thank you page
-                    Intent intent=new Intent(Admin_Mission_Add.this,MainActivity.class);
-                    startActivity(intent);
                 }
                 else {
                     Toast.makeText(Admin_Mission_Add.this, "Add Mission Fail", Toast.LENGTH_SHORT).show();
@@ -74,6 +74,11 @@ Activity activity;
     }
 
     void UploadToFireBase(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Admin_Mission_Add.this);
+        builder.setCancelable(false);
+        builder.setView(R.layout.progress);
+        AlertDialog dialog = builder.create();
+        dialog.show();
         String mission_title=title.getText().toString();
         String mission_desc=desc.getText().toString();
         int rewardPoint1=Integer.parseInt((rewardPoint.getText().toString()));
@@ -82,11 +87,14 @@ Activity activity;
         reference.child(mission_title).setValue(m1).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                dialog.dismiss();
                 Toast.makeText(Admin_Mission_Add.this, "Mission Add Successful", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
                 Toast.makeText(Admin_Mission_Add.this, "Mission Add Fail", Toast.LENGTH_SHORT).show();
             }
         });

@@ -19,8 +19,8 @@
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="500dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical">
 
@@ -31,45 +31,59 @@
                     android:layout_margin="20dp"
                     android:gravity="center"
                     android:text="Mission Title"
+                    android:maxLines="3"
+                    android:fontFamily="@font/kanitextrabold"
                     android:textSize="23sp"
                     android:textStyle="bold" />
+
 
                 <TextView
                     android:id="@+id/mission_desc2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:gravity="center"
-                    android:text="Mission Desc" />
+                    android:fontFamily="@font/kanitlight"
+                    android:textSize="18sp"
+                    android:gravity="left"
+                    android:text="Remove all grocery item that is almost to expire and replace with new grocery item." />
 
                 <TextView
                     android:id="@+id/mission_reward2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:gravity="center"
-                    android:text="Reward Point" />
+                    android:textSize="18sp"
+                    android:gravity="left"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:text="500 Points" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:gravity="center"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_confirm_mission"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    android:background="#73C65E"
+                    android:layout_weight="1"
                     android:text="Confirm" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_delete_reject"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    android:background="#F05B5B"
+                    android:layout_weight="1"
                     android:text="Delete/Reject" />
 
             </LinearLayout>

@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,7 +31,7 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
     String Key, username;
     int points;
     String description, missiontitle, staff,status;
-    Button accept, validate;//delete mission or validate it
+    AppCompatButton accept, validate;//delete mission or validate it
     DatabaseReference reference;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -46,7 +47,7 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
         accept = findViewById(R.id.btn_accept_mission);
         validate=findViewById(R.id.btn_mission_complete);
         Message=findViewById(R.id.pendingText);
-        swipeRefreshLayout=findViewById(R.id.swipe2);
+
         //Bundle Handle
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -129,7 +130,7 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
                 if (status.equals("Pending")){
                     validate.setVisibility(View.GONE);
                     validate.setEnabled(false);
-                    Message.setText("Mission Is Validating");
+                    Message.setText("Mission Is Under Validation");
                 } else if (status.equals("Completed")) {
                     validate.setVisibility(View.GONE);
                     validate.setEnabled(false);
@@ -148,7 +149,7 @@ public class User_Accecpt_Mission extends AppCompatActivity implements SwipeRefr
             //Set it into TV
             title.setText(missiontitle);
             desc.setText(description);
-            point.setText(Integer.toString(points));
+            point.setText(Integer.toString(points)+" Points");
         }
     public void onRefresh() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {

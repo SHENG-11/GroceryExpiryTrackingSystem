@@ -2,6 +2,7 @@ package com.example.groceryexpirytrackingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ public class Admin_Mission_Validate extends AppCompatActivity {
     String username,Key="";
     int point1,points;
     String description,missiontitle,staff;
-    Button delete,validate;//delete mission or validate it
+    AppCompatButton delete,validate;//delete mission or validate it
     DatabaseReference reference,reference1;
 
 
@@ -45,6 +46,7 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         //>>>>>>>>>>>>>>>>>>>>>>>>>
         if (staff.equals("All")){
             validate.setEnabled(false);
+            validate.setVisibility(View.GONE);
         }else {
             validate.setEnabled(true);
         }
@@ -110,7 +112,6 @@ public class Admin_Mission_Validate extends AppCompatActivity {
 
             });
 
-        //>>>>>>>>>>>>>>>>>>>>>>>>>>>
     }
         });
     }
@@ -126,6 +127,6 @@ public class Admin_Mission_Validate extends AppCompatActivity {
         //Set it into TV
         title.setText(missiontitle);
         desc.setText(description);
-        tvpoint.setText(Integer.toString(points));
+        tvpoint.setText(Integer.toString(points)+ " Points");
     }
 }
