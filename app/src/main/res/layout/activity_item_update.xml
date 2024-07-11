@@ -16,12 +16,26 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/card3"
+            app:cardBackgroundColor="@color/zxing_transparent"
+            android:elevation="10dp">
+
         <ImageView
             android:id="@+id/item_pic1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:src="@drawable/add_image" />
+
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -34,16 +48,7 @@
                 android:hint="@string/item_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/item_instock_date1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/purchases_date" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -81,15 +86,15 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <com.github.clans.fab.FloatingActionMenu
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
+
                 app:menu_colorPressed="@color/lavender"
                 app:menu_colorNormal="@color/lavender"
                 app:fab_size="normal"
@@ -110,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_update_item"
-                    android:src="@drawable/tick_icon"
+                    android:src="@drawable/baseline_done_all_24"
                     app:fab_showShadow="true"
                     app:fab_colorNormal="@color/green"
                     app:fabSize="mini"/>

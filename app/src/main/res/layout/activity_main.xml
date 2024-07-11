@@ -16,20 +16,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <androidx.cardview.widget.CardView
                 app:cardCornerRadius="50dp"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="10dp"
-                android:layout_gravity="center"
                 android:id="@+id/card3"
                 app:cardBackgroundColor="@color/zxing_transparent"
                 android:elevation="10dp">
 
                 <ImageView
                     android:id="@+id/userPicture1"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/profile2" />
 
             </androidx.cardview.widget.CardView>

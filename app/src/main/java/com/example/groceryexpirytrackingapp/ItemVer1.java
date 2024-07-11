@@ -15,10 +15,9 @@ public class ItemVer1 {
         this.key = key;
     }
 
-    public ItemVer1(String name, String exp_date, String purchasedate, String barcode, String imageUrl, int numOfItem) {
+    public ItemVer1(String name, String exp_date, String barcode, String imageUrl, int numOfItem) {
         this.name = name;
         this.exp_date = exp_date;
-        this.purchasedate = purchasedate;
         this.barcode = barcode;
         this.ImageUrl = imageUrl;
         this.NumOfItem = numOfItem;

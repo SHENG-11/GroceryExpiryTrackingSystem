@@ -30,12 +30,11 @@
                 android:elevation="10dp">
                 <ImageView
                     android:id="@+id/userPicture1"
-                    android:layout_width="90dp"
-                    android:layout_height="80dp"
-                    android:paddingTop="20dp"
-                    android:paddingLeft="5dp"
-                    android:src="@drawable/add_image"
-                    android:scaleType="centerCrop"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/add_image" />
             </androidx.cardview.widget.CardView>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -47,16 +46,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/item_name" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/item_instock_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/purchases_date" />
-            </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -92,13 +82,14 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_add_item"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
+                android:background="@drawable/custom_bottom"
+                android:textColor="#fff"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/add_item" />
         </LinearLayout>
     </ScrollView>

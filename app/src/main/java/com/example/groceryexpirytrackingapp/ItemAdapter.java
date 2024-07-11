@@ -26,7 +26,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> 
     Context context;
     Date expiredate;
 
-
     public ItemAdapter(Context context, List<ItemVer1> itemList) {
         this.context = context;
         this.itemList = itemList;

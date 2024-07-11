@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -15,10 +16,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -45,12 +47,11 @@ import java.util.Calendar;
 public class Item_add extends AppCompatActivity {
     Uri imageUri;
     ImageView ItemImage;
-    TextInputEditText purchase,expire,barcode1;
+    TextInputEditText expire,barcode1;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     TextInputEditText itemName,numberOfitem;
-
-    Button addItem;
-    String Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl;
+    AppCompatButton addItem;
+    String Item_name,Item_exp_date,Item_barcode,Item_ImageUrl;
     int NumOfItem;
     DatabaseReference reference;
 
@@ -61,7 +62,7 @@ public class Item_add extends AppCompatActivity {
         setContentView(R.layout.activity_item_add);
         //Find view by id
 
-        purchase=findViewById(R.id.item_instock_date);
+
         expire=findViewById(R.id.item_expire_date);
         barcode1=findViewById(R.id.item_barcode);
         itemName=findViewById(R.id.item_name);
@@ -116,20 +117,7 @@ public class Item_add extends AppCompatActivity {
                 scanCode();
             }//press the edit text field to scan item barcode and set it into column
         });
-        purchase.setOnClickListener(new View.OnClickListener() {//purchases date can only set before today
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog dialog=new DatePickerDialog(Item_add.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String date=dayOfMonth+"/"+(month+1)+"/"+year;
-                        purchase.setText(date);
-                    }
-                },year,month,day);
-                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dialog.show();
-            }
-        });
+
 
         expire.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,17 +161,24 @@ public class Item_add extends AppCompatActivity {
             numberOfitem.setError("This field is require");
             return false;
         }
-
+        String currentData=expire.getText().toString();
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            date = sdf.parse(currentData);//convert current ans to date format
+            if (!currentData.equals(sdf.format(date))) {
+                date = null;// if format was wrong
+            }
+        } catch (ParseException e) {
+            expire.setError("Please ensure correct date format");
+            return false;
+        }
 
         if (barcode1.length()==0){
             barcode1.setError("This field is require");
             return false;
         }
 
-        if (purchase.length()==0){
-            purchase.setError("This field is require");
-            return false;
-        }
         if (expire.length()==0){
             expire.setError("This field is require");
             return false;
@@ -208,10 +203,9 @@ public class Item_add extends AppCompatActivity {
                     //Item_name,Item_exp_date,Item_purchasedate,Item_barcode;
                     Item_name = itemName.getText().toString();
                     Item_exp_date=expire.getText().toString();
-                    Item_purchasedate=purchase.getText().toString();
                     Item_barcode = barcode1.getText().toString();
                     NumOfItem=Integer.parseInt(numberOfitem.getText().toString());
-                    UploadToFirebase(Item_name, Item_exp_date, Item_purchasedate,Item_barcode, imageUri,NumOfItem); // maybe need to change places
+                    UploadToFirebase(Item_name, Item_exp_date,Item_barcode, imageUri,NumOfItem); // maybe need to change places
                     Toast.makeText(Item_add.this, "Upload successful", Toast.LENGTH_SHORT).show();
 
                 }
@@ -223,7 +217,7 @@ public class Item_add extends AppCompatActivity {
             }
         });
     }
-    void UploadToFirebase(String Item_name, String Item_exp_date,String Item_purchasedate, String Item_barcode, Uri imageUri,int NumOfItem){
+    void UploadToFirebase(String Item_name, String Item_exp_date, String Item_barcode, Uri imageUri,int NumOfItem){
         //specifies image get instances & reference
 
         StorageReference imageReference=storageReference.child("ItemPic/"+Item_name+"."+getFileExtension(imageUri));
@@ -239,7 +233,7 @@ public class Item_add extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Item_ImageUrl=uri.toString();
-                        ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_purchasedate,Item_barcode,Item_ImageUrl,NumOfItem);
+                        ItemVer1 i1=new ItemVer1(Item_name,Item_exp_date,Item_barcode,Item_ImageUrl,NumOfItem);
                         reference = FirebaseDatabase.getInstance().getReference("ItemList");
                         reference.child(Item_name).setValue(i1).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

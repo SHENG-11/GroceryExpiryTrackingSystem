@@ -43,16 +43,19 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Item_Update extends AppCompatActivity {
     Uri imageUri;
     ImageView ItemImage;
     ValueEventListener valueEventListener;
     TextInputEditText itemName, numberOfitem;
-    TextInputEditText purchase, expire, barcode1;
+    TextInputEditText  expire, barcode1;
     StorageReference storageReference= FirebaseStorage.getInstance().getReference();
-    String Item_name, Item_exp_date, Item_purchasedate, Item_barcode, Item_ImageUrlOld,oldItemName;
+    String Item_name, Item_exp_date, Item_barcode, Item_ImageUrlOld,oldItemName;
     int NumOfItem;
     DatabaseReference reference,reference2,reference3;
     FloatingActionButton delete, update;
@@ -71,7 +74,7 @@ public class Item_Update extends AppCompatActivity {
         setContentView(R.layout.activity_item_update);
 
         //Find view by id
-        purchase = findViewById(R.id.item_instock_date1);
+
         expire = findViewById(R.id.item_expire_date1);
         barcode1 = findViewById(R.id.item_barcode1);
         itemName = findViewById(R.id.item_name1);
@@ -146,20 +149,7 @@ public class Item_Update extends AppCompatActivity {
                 scanCode();
             }//press the edit text field to scan item barcode and set it into column
         });
-        purchase.setOnClickListener(new View.OnClickListener() {//purchases date can only set before today
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(Item_Update.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        purchase.setText(date);
-                    }
-                }, year, month, day);
-                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dialog.show();
-            }
-        });
+
         expire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,7 +204,7 @@ public class Item_Update extends AppCompatActivity {
     void ActiongetIntent(Bundle bundle) {
         Item_name = getIntent().getStringExtra("Name");
         Item_exp_date = getIntent().getStringExtra("Exp");
-        Item_purchasedate = getIntent().getStringExtra("PDate");
+
         Item_barcode = getIntent().getStringExtra("Barcode");
         NumOfItem = getIntent().getIntExtra("NumItem", 0);//int
 
@@ -223,7 +213,6 @@ public class Item_Update extends AppCompatActivity {
 
     void setToPosition() {
 
-        purchase.setText(Item_purchasedate);
         expire.setText(Item_exp_date);
         barcode1.setText(Item_barcode);
         itemName.setText(Item_name);
@@ -267,11 +256,19 @@ public class Item_Update extends AppCompatActivity {
             barcode1.setError("This field is require");
             return false;
         }
-
-        if (purchase.length() == 0) {
-            purchase.setError("This field is require");
+        String currentData=expire.getText().toString();
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            date = sdf.parse(currentData);//convert current ans to date format
+            if (!currentData.equals(sdf.format(date))) {
+                date = null;// if format was wrong
+            }
+        } catch (ParseException e) {
+            expire.setError("Please ensure correct date format");
             return false;
         }
+
         if (expire.length() == 0) {
             expire.setError("This field is require");
             return false;
@@ -318,10 +315,9 @@ public class Item_Update extends AppCompatActivity {
     void updateData() {
         Item_name = itemName.getText().toString();
         Item_exp_date = expire.getText().toString();
-        Item_purchasedate = purchase.getText().toString();
         Item_barcode = barcode1.getText().toString();
         NumOfItem = Integer.parseInt(numberOfitem.getText().toString());
-        ItemVer1 i1 = new ItemVer1(Item_name, Item_exp_date, Item_purchasedate, Item_barcode, imageurl, NumOfItem);
+        ItemVer1 i1 = new ItemVer1(Item_name, Item_exp_date, Item_barcode, imageurl, NumOfItem);
 
         reference = FirebaseDatabase.getInstance().getReference("ItemList").child(Item_name);//new name
         reference.setValue(i1).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -329,13 +325,14 @@ public class Item_Update extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 StorageReference reference1 = FirebaseStorage.getInstance().getReferenceFromUrl(Item_ImageUrlOld);
-                reference1.delete(); // delete old image
+
                 if (Item_name.toLowerCase().equals(oldItemName.toLowerCase())){
                     Toast.makeText(Item_Update.this, "Update", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 else{
                     reference2=FirebaseDatabase.getInstance().getReference("ItemList");
+                    reference1.delete(); // delete old image
                     reference2.child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {//because got remove old one, so if same name will be remove
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
